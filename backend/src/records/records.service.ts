@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, OnModuleInit } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, OnModuleInit, Optional, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
 import { ClassificationCode } from '../common/enums';
@@ -6,7 +6,7 @@ import { AuditService } from '../audit/audit.service';
 import { LandRecord } from '../entities/land-record.entity';
 import { User } from '../entities/user.entity';
 import { RealtimeGateway } from '../realtime/realtime.gateway';
-import { readFileSync, readdirSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, readdirSync as readdirSyncFs } from 'fs';
 import { basename, join } from 'path';
 import JSZip from 'jszip';
 import {
@@ -22,6 +22,7 @@ export class RecordsService implements OnModuleInit {
     private readonly recordRepo: Repository<LandRecord>,
     private readonly audit: AuditService,
     private readonly realtime: RealtimeGateway,
+    @Optional() @Inject('QGIS_EXPORT_REPO') private readonly qgisExportRepo?: any,
   ) {}
 
   async onModuleInit() {
@@ -186,6 +187,238 @@ export class RecordsService implements OnModuleInit {
     });
     if (!record) throw new NotFoundException('Record not found');
     return record;
+  }
+
+  private getQgisExportDir() {
+    const exportDir = join(process.cwd(), '..', 'storage', 'qgis-exports');
+    if (!existsSync(exportDir)) {
+      mkdirSync(exportDir, { recursive: true });
+    }
+    return exportDir;
+  }
+
+  private getQgisExportPaths() {
+    const exportDir = this.getQgisExportDir();
+    return {
+      exportDir,
+      activePath: join(exportDir, 'active-export.json'),
+      metaPath: join(exportDir, 'active-export.meta.json'),
+      historyPath: join(exportDir, 'history.json'),
+    };
+  }
+
+  async getActiveQgisExport() {
+    if (this.qgisExportRepo?.findOne) {
+      try {
+        const exportRecord = await this.qgisExportRepo.findOne({
+          where: { isActive: true },
+          order: { createdAt: 'DESC' },
+        });
+        if (exportRecord) {
+          return exportRecord;
+        }
+      } catch {
+        // fall back to file-based persistence
+      }
+    }
+
+    const { activePath } = this.getQgisExportPaths();
+    if (!existsSync(activePath)) {
+      return null;
+    }
+
+    try {
+      const raw = readFileSync(activePath, 'utf8');
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  async persistQgisUpload(file: Express.Multer.File, user: User) {
+    const parsed = await this.validateQgisUpload(file, user);
+    const { exportDir, activePath, metaPath, historyPath } = this.getQgisExportPaths();
+    const safeName = `${Date.now()}-${(file.originalname || 'qgis-export').replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+    const zipPath = join(exportDir, safeName);
+    const payload = {
+      ...parsed,
+      persistedAt: new Date().toISOString(),
+      uploadedById: user?.id || null,
+      originalFileName: file.originalname,
+      zipPath,
+      exportId: safeName,
+    };
+
+    const history = this.readQgisHistory(historyPath);
+    history.push(payload);
+    writeFileSync(zipPath, file.buffer);
+    writeFileSync(activePath, JSON.stringify(payload, null, 2));
+    writeFileSync(metaPath, JSON.stringify({
+      originalFileName: file.originalname,
+      persistedAt: payload.persistedAt,
+      uploadedById: user?.id || null,
+      zipPath,
+      exportId: payload.exportId,
+    }, null, 2));
+    writeFileSync(historyPath, JSON.stringify(history, null, 2));
+
+    await this.replaceRecordsFromQgisPayload(payload, user);
+
+    return payload;
+  }
+
+  private readQgisHistory(historyPath: string): any[] {
+    if (!existsSync(historyPath)) return [];
+    try {
+      const raw = readFileSync(historyPath, 'utf8');
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  async listQgisExportHistory() {
+    const { historyPath } = this.getQgisExportPaths();
+    return this.readQgisHistory(historyPath);
+  }
+
+  async rollbackQgisExport(exportId: string, user?: User) {
+    const { historyPath, activePath } = this.getQgisExportPaths();
+    const history = this.readQgisHistory(historyPath);
+    const match = history.find((entry) => entry.exportId === exportId || entry.originalFileName === exportId);
+    if (!match) {
+      throw new BadRequestException('QGIS export not found');
+    }
+
+    if (!existsSync(match.zipPath)) {
+      throw new BadRequestException('Stored QGIS export archive no longer exists');
+    }
+
+    const payload = {
+      ...match,
+      persistedAt: new Date().toISOString(),
+      uploadedById: user?.id || null,
+      rollbackFrom: exportId,
+    };
+
+    writeFileSync(activePath, JSON.stringify(payload, null, 2));
+    writeFileSync(historyPath, JSON.stringify([...history, payload], null, 2));
+
+    await this.replaceRecordsFromQgisPayload(payload, user);
+
+    return payload;
+  }
+
+  async replaceRecordsFromQgisPayload(payload: any, user?: User): Promise<{ success: true; imported: number; skipped: number }> {
+    const layers = Array.isArray(payload?.layers) ? payload.layers : [];
+    const imported: LandRecord[] = [];
+    const skipped: string[] = [];
+
+    if (!layers.length) {
+      return { success: true, imported: 0, skipped: 0 };
+    }
+
+    for (const layer of layers) {
+      try {
+        const geojson = layer?.geojson;
+        if (!geojson?.features || !Array.isArray(geojson.features)) {
+          skipped.push(`${layer?.name || 'unknown'}: No features array`);
+          continue;
+        }
+
+        for (const feature of geojson.features) {
+          const props = feature?.properties || {};
+          const assessorsLotRaw = this.getQgisProperty(props, ['Assessors Data_PARCEL NO', 'PARCEL NO', 'LOT NUMBER', 'PIN']);
+          const cadastralLotRaw = this.getQgisProperty(props, ['Assessors Data_SERVER PIN', 'SERVER PIN', 'PIN', 'Assessors Data_PARCEL NO', 'LOT NUMBER']);
+          const assessorsLotNo = this.normalizeLotNo(assessorsLotRaw);
+          const cadastralLotNo = this.normalizeLotNo(cadastralLotRaw);
+          const primaryLotNo = cadastralLotNo || assessorsLotNo;
+          if (!primaryLotNo) continue;
+
+          const classificationCode = this.mapQgisPropertyToClassification(
+            this.normalizeString(this.getQgisProperty(props, ['Code', 'Gen_LU2022', 'SpcLU2022', 'Assessors Data_ActualUseName', 'Assessors Data_ActualUse', 'ActualUseN', 'ActualUseName', 'ActualUse', 'Actual Use', 'USE']))
+          );
+
+          const serverPin = this.normalizeLotNo(this.getQgisProperty(props, ['Assessors Data_SERVER PIN', 'SERVER PIN', 'PIN']));
+          const [arpA, arpB, arpC, arpD, arpE, arpF] = this.parseServerPin(serverPin || cadastralLotNo || assessorsLotNo);
+          const nameOfOwner = this.normalizeString(this.getQgisProperty(props, ['Assessors Data_DisplayName', 'DisplayNam', 'DisplayName', 'OWNER'])) || this.combinationName(props) || 'Unknown';
+          const titleNo = this.normalizeString(this.getQgisProperty(props, ['Assessors Data_Title No.', 'Title No.', 'Title No']));
+          const areaSqm = this.normalizeNumber(this.getQgisProperty(props, ['Assessors Data_TotalArea', 'AREA (m²)', 'TotalArea', 'AREA']));
+          const existingRecord = await this.recordRepo.findOne({
+            where: [
+              { assessorsLotNo: primaryLotNo },
+              { cadastralLotNo: primaryLotNo },
+            ],
+          });
+
+          const record = existingRecord || this.recordRepo.create({
+            assessorsLotNo: assessorsLotNo || primaryLotNo,
+            cadastralLotNo: cadastralLotNo || assessorsLotNo || primaryLotNo,
+            tdNo: this.normalizeString(this.getQgisProperty(props, ['Declaratio', 'TD NO', 'TDNO'])),
+            arpA,
+            arpB,
+            arpC,
+            arpD,
+            arpE,
+            arpF,
+            nameOfOwner,
+            titleNo,
+            areaSqm,
+            classificationCode,
+            improvement: 0,
+            buildingNo: undefined,
+            mch: undefined,
+            oth: undefined,
+            indexNo: this.normalizeString(this.getQgisProperty(props, ['SectionNo', 'SECTION', 'CadastralS', 'Assessors Data_SectionNo', 'Assessors Data_CadastralSurveyNo', 'LOT NUMBER'])) || 'N/A',
+            barangay: this.normalizeString(this.getQgisProperty(props, ['BarangayNa', 'BARANGAY', 'Assessors Data_Barangay'])) || 'Unknown',
+            remarks: this.normalizeString(this.getQgisProperty(props, ['Remarks', 'REMARKS', "DSCRPT'N", 'DSCRPTN'])),
+            latitude: this.extractCentroid(feature?.geometry)?.[0],
+            longitude: this.extractCentroid(feature?.geometry)?.[1],
+            createdById: user?.id,
+          } as Partial<LandRecord>);
+
+          if (existingRecord) {
+            Object.assign(existingRecord, {
+              assessorsLotNo: assessorsLotNo || primaryLotNo,
+              cadastralLotNo: cadastralLotNo || assessorsLotNo || primaryLotNo,
+              tdNo: this.normalizeString(this.getQgisProperty(props, ['Declaratio', 'TD NO', 'TDNO'])),
+              arpA,
+              arpB,
+              arpC,
+              arpD,
+              arpE,
+              arpF,
+              nameOfOwner,
+              titleNo,
+              areaSqm,
+              classificationCode,
+              indexNo: this.normalizeString(this.getQgisProperty(props, ['SectionNo', 'SECTION', 'CadastralS', 'Assessors Data_SectionNo', 'Assessors Data_CadastralSurveyNo', 'LOT NUMBER'])) || 'N/A',
+              barangay: this.normalizeString(this.getQgisProperty(props, ['BarangayNa', 'BARANGAY', 'Assessors Data_Barangay'])) || 'Unknown',
+              remarks: this.normalizeString(this.getQgisProperty(props, ['Remarks', 'REMARKS', "DSCRPT'N", 'DSCRPTN'])),
+              latitude: this.extractCentroid(feature?.geometry)?.[0],
+              longitude: this.extractCentroid(feature?.geometry)?.[1],
+            });
+          }
+
+          const saved = await this.recordRepo.save(record);
+          imported.push(saved);
+        }
+      } catch (error) {
+        skipped.push(`${layer?.name || 'unknown'}: ${String(error)}`);
+      }
+    }
+
+    await this.audit.log({
+      userId: user?.id,
+      action: 'REPLACE_RECORDS_QGIS',
+      entity: 'land_record',
+      details: { imported: imported.length, skipped: skipped.length },
+    });
+
+    this.realtime.broadcast('records_updated', { action: 'bulk_import', count: imported.length });
+
+    return { success: true, imported: imported.length, skipped: skipped.length };
   }
 
   async validateQgisUpload(file: Express.Multer.File, user: User) {
