@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QGIS Server WMS sample</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin=""
+    />
+    <style>
+      #map { height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+      const map = L.map('map').setView([12.8797, 121.774], 7);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
+
+      const qgisWmsUrl = 'http://localhost:8081/ows/';
+
+      const wms = L.tileLayer.wms(qgisWmsUrl, {
+        layers: 'TOLEDOLANDUSEFINAL,TOLEDO BASE SHAPE,Assessors Data,TOLEDO PARCELS,PSA BUILDING FOOTPRINT,PHL ADMBDNDA ADM3 PSA NAMRIA 20200529,PHL ADM3,LINE FEATURES,LINE,GIS OSM ROADS FREE 1,BARANGAY PARTITION,ATLS TENEMENT PER BATGY.,DIMENTION 2,CONTOURS,CEBECO POST,BRGY. BOUNDARY 2,CADASTRAL CLAIMANTS,AREA FEATURES',
+        format: 'image/png',
+        transparent: true,
+        map: '/srv/qgis/projects/landbook.qgs',
+        maxZoom: 19,
+      }).addTo(map);
+
+      wms.on('tileerror', (errorEvent) => {
+        console.error('QGIS WMS tile error', errorEvent);
+      });
+
+      // Use GETCAPABILITIES to get exact layer names:
+      // http://localhost:8081/ows/?SERVICE=WMS&REQUEST=GetCapabilities&MAP=/srv/qgis/projects/landbook.qgs
+    </script>
+  </body>
+</html>

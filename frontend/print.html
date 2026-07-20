@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Certificate — Print Template</title>
+  <link rel="stylesheet" href="print.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="certificate">
+      <div class="content">
+        <div class="left">
+          <div class="map-container">
+            <!-- Map image will be inserted here by print function -->
+            <div class="map-placeholder">Map / Sketch</div>
+            <div class="North">
+                <img src="North.svg" alt="North Arrow" class="north-arrow" onerror="this.style.display='none'" />
+            </div>
+
+            <div class="annotation-controls">
+              <button type="button" onclick="addTextAnnotation()">Add Text</button>
+              <button type="button" onclick="addLineAnnotation()">Add Line</button>
+              <button type="button" onclick="addBrokenLineAnnotation()">Add Broken Line</button>
+              <button type="button" onclick="deleteSelectedAnnotation()">Delete Selected</button>
+              <button type="button" onclick="promptSetSize()">Set Size</button>
+            </div>
+            <svg class="annotation-svg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+            <div class="annotation-layer" aria-hidden="false"></div>
+
+            <!-- Map overlays: Prepared by and Prepared for -->
+            <div class="map-overlay">
+              <div class="prepared-section">
+                <div class="prepared-label">Prepared by:</div>
+                <select id="prepared-by-select" onchange="updatePreparedBy()" class="prepared-select">
+                  <option value="april-espera" data-name="April Rose A. Espera" data-title="Admn Aide-I">April Rose A. Espera</option>
+                  <option value="maria-sipalay" data-name="MARIA CHONA SIPALAY" data-title="Land Records Specialist">MARIA CHONA SIPALAY</option>
+                  <option value="juan-santos" data-name="Juan T. Santos" data-title="Sr. Assessor">Juan T. Santos</option>
+                  <option value="rosa-garcia" data-name="Rosa M. Garcia" data-title="Assessor">Rosa M. Garcia</option>
+                  <option value="custom" data-name="Custom Entry" data-title="">Custom Entry</option>
+                </select>
+                <div class="prepared-name" id="prepared-by-name">April Rose A. Espera</div>
+                <div class="prepared-title" id="prepared-by-title">Admn Aide-I</div>
+              </div>
+              
+              <div class="prepared-section">
+                <div class="prepared-label">Prepared for:</div>
+                <select id="prepared-for-select" onchange="updatePreparedFor()" class="prepared-select">
+                  <option value="ibbara-cereno" data-name="Ibbara L. Cereño" data-title="Division Chief">Ibarra L. Cereño</option>
+                  <option value="glenn-cavada" data-name="ATTY. GLENN M. CAVADA" data-title="OIC - City Assessor">ATTY. GLENN M. CAVADA</option>
+                  <option value="carlos-reyes" data-name="Carlos V. Reyes" data-title="City Treasurer">Carlos V. Reyes</option>
+                  <option value="elena-cruz" data-name="Elena P. Cruz" data-title="Senior Official">Elena P. Cruz</option>
+                  <option value="custom" data-name="Custom Entry" data-title="">Custom Entry</option>
+                </select>
+                <div class="prepared-name" id="prepared-for-name">Ibarra L. Cereño</div>
+                <div class="prepared-title" id="prepared-for-title">Division Chief</div>
+              </div>
+            </div>
+          </div>
+          <div class="note">NOTE: THIS PLAN IS ISSUED FOR TAXATION PURPOSES ONLY AND SHALL NOT BE CONSIDERED AS EVIDENCE FOR SETTLING OF BOUNDARY DISPUTE</div>
+        </div>
+
+        <div class="right">
+          <div class="right-inner">
+            <div class="print-size-overlay" aria-hidden="true">
+              <label for="page-size-select">Print size:</label>
+              <select id="page-size-select" onchange="updatePageSize()">
+                <option value="a4-landscape">A4 Landscape</option>
+                <option value="a4-portrait">A4 Portrait</option>
+                <option value="a3-landscape">A3 Landscape</option>
+                <option value="a3-portrait">A3 Portrait</option>
+                <option value="letter-landscape">Letter Landscape</option>
+                <option value="letter-portrait">Letter Portrait</option>
+              </select>
+            </div>
+            <div class="header-logos">
+              <div class="circle-logo">
+                <img src="logo.svg" alt="Toledo Seal" class="logo-img" onerror="this.style.display='none'" />
+              </div>
+              <div class="circle-logo">
+                <img src="BAGONGPILIPINAS.png" alt="Assessor Seal" class="logo-img" onerror="this.style.display='none'" />
+              </div>
+              <div class="circle-logo">
+                <img src="Assessor.png" alt="QGIS Logo" class="logo-img" onerror="this.style.display='none'" />
+              </div>
+            </div>
+
+            <div class="title-block">
+              <div class="gov">REPUBLIC OF THE PHILIPPINES</div>
+              <div class="city">City of Toledo</div>
+              <div class="spacer">-oOo-</div>
+              <div class="office">OFFICE OF THE ASSESSOR</div>
+              <h1 class="cert-main">CERTIFICATION</h1>
+            </div>
+
+            <div class="cert-text">
+              <a><strong>TO WHOM IT MAY CONCERN:</strong></a>
+              <p id="cert-main-text">Accompanying is a certified Sketch Plan of Lot No. <strong id="lot-no">4144-B-1</strong> Toledo Cadastre, situated at Barangay <strong id="barangay">Poog</strong>, Toledo City containing an area of <strong id="area">3601</strong> square meters identified in the Tax Mapping Roll as <strong id="pin">PIN 149-00-028-02-011</strong> in the name of <strong id="owner">MA. CHONA R. SIPALAY married to ALLAN SIPALAY</strong>.</p>
+
+              <p id="cert-request-text">Issued Upon request of <strong id="request-owner">MARIA CHONA SIPALAY</strong> on <strong id="date-issued">April 28, 2026</strong></p>
+
+              <div class="sign-block">
+                <label for="official-select">Select Official:</label>
+                <select id="official-select" onchange="updateOfficial()">
+                  <option value="atty-cavada" data-name="ATTY. GLENN M. CAVADA" data-title="OIC - City Assessor">ATTY. GLENN M. CAVADA - OIC - City Assessor</option>
+                  <option value="april-espera" data-name="April Rose A. Espera" data-title="Admn Aide-I">April Rose A. Espera - Admn Aide-I</option>
+                  <option value="ibbara-cereno" data-name="Ibarra L. Cereño" data-title="Division Chief">Ibarra L. Cereño - Division Chief</option>
+                  <option value="maria-sipalay" data-name="MARIA CHONA SIPALAY" data-title="Land Records Specialist">MARIA CHONA SIPALAY - Land Records Specialist</option>
+                  <option value="custom" data-name="Custom Entry" data-title="Custom Title">Custom Entry</option>
+                </select>
+                <div class="sig-name" id="sig-name">ATTY. GLENN M. CAVADA</div>
+                <div class="sig-title" id="sig-title">OIC - City Assessor</div>
+              </div>
+
+              <div class="fields">
+                <div><strong>O.R No:</strong> <strong><input id="or-number" type="text" placeholder="Enter O.R. No" /></strong></div>
+                <div><strong>Date Issued:</strong> <strong id="date-issued-field"></strong></div>
+                <div><strong>Amount Paid:</strong> <strong><input id="amount-paid" type="text" placeholder="Enter Amount Paid" /></strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Override Text Button -->
+  <button class="override-text-btn" onclick="openOverrideModal()">Override Text</button>
+
+  <!-- Print Button -->
+  <button class="print-btn" onclick="handlePrint()">Print</button>
+
+  <!-- Override Text Modal -->
+  <div id="overrideModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Override Certificate Text</h2>
+        <button class="close-btn" onclick="closeOverrideModal()">&times;</button>
+      </div>
+      <form id="overrideForm">
+        <div class="form-group">
+          <label for="certMainText">Main Certificate Text:</label>
+          <div id="certMainText" class="rich-text-editor" contenteditable="true" placeholder="Enter the main certificate text..."></div>
+        </div>
+        <div class="form-group">
+          <label for="certRequestText">Request/Issuance Text:</label>
+          <div id="certRequestText" class="rich-text-editor" contenteditable="true" placeholder="Enter the request/issuance text..."></div>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="reset-btn" onclick="resetToDefaults()">Reset to Defaults</button>
+          <button type="button" class="cancel-btn" onclick="closeOverrideModal()">Cancel</button>
+          <button type="button" class="save-btn" onclick="saveOverrideText()">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Script to handle dynamic data updates from the parent window
+    function updateCertificateData(featureProperties) {
+      if (!featureProperties) return;
+
+      // Extract data from feature properties
+      var lotNo = featureProperties['LOT_NO'] || featureProperties['lot'] || '4144-B-1';
+      var barangay = featureProperties['BARANGAY'] || featureProperties['brgy'] || 'Poog';
+      var area = featureProperties['AREA'] || featureProperties['area'] || '3601';
+      var pin = featureProperties['PIN'] || featureProperties['pin'] || 'PIN 149-00-028-02-011';
+      var owner = featureProperties['OWNER'] || featureProperties['owner'] || 'MA. CHONA R. SIPALAY married to ALLAN SIPALAY';
+      
+      // Update the elements
+      document.getElementById('lot-no').textContent = lotNo;
+      document.getElementById('barangay').textContent = barangay;
+      document.getElementById('area').textContent = area;
+      document.getElementById('pin').textContent = pin;
+      document.getElementById('owner').textContent = owner;
+      document.getElementById('request-owner').textContent = owner;
+      
+      // Get current date
+      var dateIssued = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('date-issued').textContent = dateIssued;
+      document.getElementById('date-issued-field').textContent = dateIssued;
+    }
+
+    // Initialize the auto-filled issued date and any incoming certificate data
+    function initializePrintPage() {
+      var dateIssued = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('date-issued').textContent = dateIssued;
+      document.getElementById('date-issued-field').textContent = dateIssued;
+
+      if (window.opener && window.opener.selectedFeatureProperties) {
+        updateCertificateData(window.opener.selectedFeatureProperties);
+      }
+    }
+
+    initializePrintPage();
+
+    function setPrintPageSize(sizeKey) {
+      var sizeMap = {
+        'a4-landscape': { css: '297mm 210mm', width: '297mm', height: '195mm' },
+        'a4-portrait': { css: '210mm 297mm', width: '198mm', height: '285mm' },
+        'a3-landscape': { css: '420mm 297mm', width: '408mm', height: '285mm' },
+        'a3-portrait': { css: '297mm 420mm', width: '285mm', height: '408mm' },
+        'letter-landscape': { css: '279mm 216mm', width: '267mm', height: '204mm' },
+        'letter-portrait': { css: '216mm 279mm', width: '204mm', height: '267mm' }
+      };
+      var selected = sizeMap[sizeKey] || sizeMap['a4-landscape'];
+      var pageStyle = document.getElementById('page-size-style');
+      if (!pageStyle) {
+        pageStyle = document.createElement('style');
+        pageStyle.id = 'page-size-style';
+        document.head.appendChild(pageStyle);
+      }
+      pageStyle.textContent = '@page { size: ' + selected.css + '; margin: 6mm; }';
+      document.documentElement.style.setProperty('--certificate-width', selected.width);
+      document.documentElement.style.setProperty('--certificate-height', selected.height);
+
+      // Spacing adjustments (keep font sizes unchanged) — larger whitespace for A3
+      var spacing = {
+        certPadding: '6mm',
+        contentGap: '8mm',
+        fontSize: '11px',
+        titleLetterSpacing: '6.2px',
+        signBlockMarginTop: '50px',
+        fieldsGap: '50px',
+        fieldsRowGap: '6px',
+        mapOverlayBottom: '12mm',
+        headerLogosGap: '8px',
+        headerLogosMarginBottom: '8px',
+        certMainMarginTop: '20px',
+        certParagraphGap: '6px',
+        rightInnerPadding: '6mm'
+      };
+
+      if (sizeKey && sizeKey.indexOf('a3') === 0) {
+        spacing = {
+          certPadding: '18mm',
+          contentGap: '20mm',
+          titleLetterSpacing: '6px',
+          fontSize: '15px',
+          signBlockMarginTop: '80px',
+          fieldsGap: '90px',
+          fieldsRowGap: '12px',
+          mapOverlayBottom: '30mm',
+          headerLogosGap: '18px',
+          headerLogosMarginBottom: '42px',
+          certMainMarginTop: '60px',
+          certParagraphGap: '20px',
+          rightInnerPadding: '12mm'
+        };
+      } else if (sizeKey && sizeKey.indexOf('a4') === 0) {
+        spacing = {
+          certPadding: '8mm',
+          contentGap: '8mm',
+          fontSize: '11px',
+          titleLetterSpacing: '6.2px',
+          signBlockMarginTop: '60px',
+          fieldsGap: '50px',
+          fieldsRowGap: '6px',
+          mapOverlayBottom: '12mm',
+          headerLogosGap: '8px',
+          headerLogosMarginBottom: '10px',
+          certMainMarginTop: '22px',
+          certParagraphGap: '6px',
+          rightInnerPadding: '6mm'
+        };
+      } else {
+        // letter and other
+        spacing = {
+          certPadding: '8mm',
+          contentGap: '9mm',
+          fontSize: '11px',
+          titleLetterSpacing: '6.8px',
+          signBlockMarginTop: '65px',
+          fieldsGap: '50px',
+          fieldsRowGap: '7px',
+          mapOverlayBottom: '14mm',
+          headerLogosGap: '9px',
+          headerLogosMarginBottom: '10px',
+          certMainMarginTop: '22px',
+          certParagraphGap: '6px',
+          rightInnerPadding: '6mm'
+        };
+      }
+
+      document.documentElement.style.setProperty('--cert-padding', spacing.certPadding);
+      document.documentElement.style.setProperty('--content-gap', spacing.contentGap);
+      document.documentElement.style.setProperty('--print-font-size', spacing.fontSize || '11px');
+      document.documentElement.style.setProperty('--title-letter-spacing', spacing.titleLetterSpacing);
+      document.documentElement.style.setProperty('--sign-block-margin-top', spacing.signBlockMarginTop);
+      document.documentElement.style.setProperty('--fields-gap', spacing.fieldsGap);
+      document.documentElement.style.setProperty('--fields-row-gap', spacing.fieldsRowGap || '6px');
+      document.documentElement.style.setProperty('--map-overlay-bottom', spacing.mapOverlayBottom);
+      document.documentElement.style.setProperty('--header-logos-gap', spacing.headerLogosGap);
+      document.documentElement.style.setProperty('--header-logos-margin-bottom', spacing.headerLogosMarginBottom || spacing.headerLogosGap || '6px');
+      document.documentElement.style.setProperty('--cert-main-margin-top', spacing.certMainMarginTop);
+      document.documentElement.style.setProperty('--cert-paragraph-gap', spacing.certParagraphGap);
+      document.documentElement.style.setProperty('--right-inner-padding', spacing.rightInnerPadding);
+    }
+
+    function updatePageSize() {
+      var select = document.getElementById('page-size-select');
+      if (select) {
+        setPrintPageSize(select.value);
+      }
+    }
+
+    // Initialize the print page size option when the page loads
+    updatePageSize();
+
+    var annotationIdCounter = 0;
+    var selectedAnnotation = null;
+    var annotationDragState = null;
+    var lineCreationState = null;
+
+    function createAnnotationId() {
+      annotationIdCounter += 1;
+      return 'annotation-' + annotationIdCounter;
+    }
+
+    function initAnnotationTools() {
+      var container = document.querySelector('.map-container');
+      if (!container) {
+        return;
+      }
+      container.addEventListener('click', function(event) {
+        if (lineCreationState) {
+          if (event.target.closest && event.target.closest('.annotation-controls')) {
+            return;
+          }
+          handleLineCreationClick(event);
+          return;
+        }
+        if (event.target === container || event.target === document.querySelector('.annotation-svg')) {
+          clearAnnotationSelection();
+        }
+      });
+
+      // Clear selection when clicking anywhere outside annotation items
+      document.addEventListener('click', function(event) {
+        // if click is inside an annotation item, do nothing
+        if (event.target.closest && event.target.closest('.annotation-item')) return;
+        clearAnnotationSelection();
+      });
+    }
+
+    function addTextAnnotation() {
+      var layer = document.querySelector('.annotation-layer');
+      if (!layer) {
+        return;
+      }
+      var annotation = document.createElement('div');
+      annotation.className = 'annotation-text annotation-item';
+      annotation.id = createAnnotationId();
+      annotation.textContent = 'TEXT';
+      annotation.style.left = '50%';
+      annotation.style.top = '50%';
+      annotation.setAttribute('contenteditable', 'false');
+      annotation.addEventListener('mousedown', startTextDrag);
+      annotation.addEventListener('click', function(event) {
+        event.stopPropagation();
+        selectAnnotation(annotation);
+      });
+      annotation.addEventListener('dblclick', function(event) {
+        event.stopPropagation();
+        annotation.setAttribute('contenteditable', 'true');
+        annotation.focus();
+      });
+      annotation.addEventListener('blur', function() {
+        annotation.setAttribute('contenteditable', 'false');
+      });
+      annotation.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+      });
+      layer.appendChild(annotation);
+      selectAnnotation(annotation);
+      // add corner resize handles
+      addResizeHandles(annotation);
+    }
+
+    function addLineAnnotation() {
+      startLineCreation('line');
+    }
+
+    function startLineCreation(type) {
+      if (lineCreationState) return;
+      var container = document.querySelector('.map-container');
+      if (!container) return;
+      lineCreationState = {
+        type: type,
+        points: [],
+        listener: null
+      };
+
+      // capturing listener so clicks on child elements don't interfere
+      lineCreationState.listener = function(evt) {
+        // ignore clicks on controls
+        if (evt.target.closest && evt.target.closest('.annotation-controls')) return;
+        var rect = container.getBoundingClientRect();
+        var x = ((evt.clientX - rect.left) / rect.width) * 100;
+        var y = ((evt.clientY - rect.top) / rect.height) * 100;
+        x = Math.max(0, Math.min(100, x));
+        y = Math.max(0, Math.min(100, y));
+        lineCreationState.points.push({ x: x, y: y });
+        if (lineCreationState.points.length === 2) {
+          var p1 = lineCreationState.points[0];
+          var p2 = lineCreationState.points[1];
+          createStraightLineAnnotation(p1, p2);
+          // cleanup
+          container.removeEventListener('click', lineCreationState.listener, true);
+          lineCreationState = null;
+        }
+      };
+
+      container.addEventListener('click', lineCreationState.listener, true);
+      // lightweight visual hint
+      alert('Click the first endpoint for the line, then click the second endpoint.');
+    }
+
+    function addBrokenLineAnnotation() {
+      addSvgAnnotation('polyline');
+    }
+
+    function addStraightLineAnnotation() {
+      createStraightLineAnnotation({ x: 10, y: 50 }, { x: 90, y: 50 });
+    }
+
+    function createStraightLineAnnotation(p1, p2) {
+      var layer = document.querySelector('.annotation-layer');
+      if (!layer) {
+        return;
+      }
+      var wrapper = document.createElement('div');
+      wrapper.className = 'annotation-line-wrapper annotation-item';
+      wrapper.id = createAnnotationId();
+      // compute tight bounding box for the wrapper around the line (with small padding)
+      var minX = Math.min(p1.x, p2.x);
+      var minY = Math.min(p1.y, p2.y);
+      var maxX = Math.max(p1.x, p2.x);
+      var maxY = Math.max(p1.y, p2.y);
+      var pad = 2; // percent padding around endpoints
+      minX = Math.max(0, minX - pad);
+      minY = Math.max(0, minY - pad);
+      maxX = Math.min(100, maxX + pad);
+      maxY = Math.min(100, maxY + pad);
+      var w = Math.max(1, maxX - minX);
+      var h = Math.max(1, maxY - minY);
+      wrapper.style.left = minX + '%';
+      wrapper.style.top = minY + '%';
+      wrapper.style.width = w + '%';
+      wrapper.style.height = h + '%';
+      wrapper.style.pointerEvents = 'auto';
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', minX + ' ' + minY + ' ' + w + ' ' + h);
+      svg.setAttribute('preserveAspectRatio', 'none');
+      svg.style.width = '100%';
+      svg.style.height = '100%';
+      svg.style.display = 'block';
+      svg.style.pointerEvents = 'auto';
+
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', p1.x);
+      line.setAttribute('y1', p1.y);
+      line.setAttribute('x2', p2.x);
+      line.setAttribute('y2', p2.y);
+      line.classList.add('annotation-line');
+      line.setAttribute('data-type', 'line');
+      line.setAttribute('fill', 'none');
+      line.setAttribute('stroke', 'rgba(0,0,0,0.5)');
+      line.setAttribute('vector-effect', 'non-scaling-stroke');
+      line.setAttribute('shape-rendering', 'geometricPrecision');
+      line.setAttribute('stroke-opacity', '0.5');
+      line.style.opacity = '0.5';
+      // let clicks target the line stroke specifically
+      line.style.pointerEvents = 'stroke';
+
+      svg.appendChild(line);
+      wrapper.appendChild(svg);
+
+      var handleA = document.createElement('div');
+      handleA.className = 'annotation-line-handle line-handle-a';
+      handleA.dataset.handle = 'a';
+      handleA.addEventListener('mousedown', startLineHandleDrag);
+      wrapper.appendChild(handleA);
+
+      var handleB = document.createElement('div');
+      handleB.className = 'annotation-line-handle line-handle-b';
+      handleB.dataset.handle = 'b';
+      handleB.addEventListener('mousedown', startLineHandleDrag);
+      wrapper.appendChild(handleB);
+
+      // attach handlers to the SVG so selecting/drags target this specific line
+      // allow clicking the svg area to select and mousedown on wrapper to drag whole line
+      // wrapper is tight to the line so clicks target the correct wrapper
+      svg.addEventListener('click', function(event) {
+        event.stopPropagation();
+        selectAnnotation(wrapper);
+      });
+      wrapper.addEventListener('mousedown', function(event) {
+        // ignore if down on a handle
+        if (event.target.closest && event.target.closest('.annotation-line-handle')) return;
+        startLineDrag.call(wrapper, event);
+      });
+
+      layer.appendChild(wrapper);
+      updateLineHandlePositions(wrapper);
+      selectAnnotation(wrapper);
+    }
+
+    function startLineDrag(event) {
+      if (event.button !== 0) return;
+      // if user started drag on a handle, ignore (handles stop propagation anyway)
+      var wrapper = event.currentTarget;
+      event.preventDefault();
+      event.stopPropagation();
+      selectAnnotation(wrapper);
+      var line = wrapper.querySelector('line');
+      var container = document.querySelector('.map-container');
+      var rect = container.getBoundingClientRect();
+      annotationDragState = {
+        element: wrapper,
+        type: 'line-move',
+        startX: event.clientX,
+        startY: event.clientY,
+        width: rect.width,
+        height: rect.height,
+        x1: parseFloat(line.getAttribute('x1')) || 0,
+        y1: parseFloat(line.getAttribute('y1')) || 0,
+        x2: parseFloat(line.getAttribute('x2')) || 0,
+        y2: parseFloat(line.getAttribute('y2')) || 0
+      };
+      window.addEventListener('mousemove', handleLineMove);
+      window.addEventListener('mouseup', stopDrag);
+    }
+
+    function handleLineMove(event) {
+      if (!annotationDragState || annotationDragState.type !== 'line-move') return;
+      event.preventDefault();
+      var dx = event.clientX - annotationDragState.startX;
+      var dy = event.clientY - annotationDragState.startY;
+      var percentDx = dx / annotationDragState.width * 100;
+      var percentDy = dy / annotationDragState.height * 100;
+      var el = annotationDragState.element;
+      var line = el.querySelector('line');
+      var nx1 = Math.max(0, Math.min(100, annotationDragState.x1 + percentDx));
+      var ny1 = Math.max(0, Math.min(100, annotationDragState.y1 + percentDy));
+      var nx2 = Math.max(0, Math.min(100, annotationDragState.x2 + percentDx));
+      var ny2 = Math.max(0, Math.min(100, annotationDragState.y2 + percentDy));
+      line.setAttribute('x1', nx1);
+      line.setAttribute('y1', ny1);
+      line.setAttribute('x2', nx2);
+      line.setAttribute('y2', ny2);
+      updateLineWrapperBounds(el);
+      updateLineHandlePositions(el);
+    }
+
+    function updateLineHandlePositions(wrapper) {
+      var line = wrapper.querySelector('line');
+      if (!line) return;
+      var ax = parseFloat(line.getAttribute('x1')) || 0;
+      var ay = parseFloat(line.getAttribute('y1')) || 0;
+      var bx = parseFloat(line.getAttribute('x2')) || 0;
+      var by = parseFloat(line.getAttribute('y2')) || 0;
+      var handleA = wrapper.querySelector('.line-handle-a');
+      var handleB = wrapper.querySelector('.line-handle-b');
+      // wrapper may be a tight bbox; compute positions relative to wrapper
+      var wrapperLeft = parseFloat(wrapper.style.left) || 0;
+      var wrapperTop = parseFloat(wrapper.style.top) || 0;
+      var wrapperWidth = parseFloat(wrapper.style.width) || 100;
+      var wrapperHeight = parseFloat(wrapper.style.height) || 100;
+      if (handleA) {
+        var relAx = (ax - wrapperLeft) / wrapperWidth * 100;
+        var relAy = (ay - wrapperTop) / wrapperHeight * 100;
+        handleA.style.left = relAx + '%';
+        handleA.style.top = relAy + '%';
+      }
+      if (handleB) {
+        var relBx = (bx - wrapperLeft) / wrapperWidth * 100;
+        var relBy = (by - wrapperTop) / wrapperHeight * 100;
+        handleB.style.left = relBx + '%';
+        handleB.style.top = relBy + '%';
+      }
+    }
+
+    function updateLineWrapperBounds(wrapper) {
+      var line = wrapper.querySelector('line');
+      if (!line) return;
+      var x1 = parseFloat(line.getAttribute('x1')) || 0;
+      var y1 = parseFloat(line.getAttribute('y1')) || 0;
+      var x2 = parseFloat(line.getAttribute('x2')) || 0;
+      var y2 = parseFloat(line.getAttribute('y2')) || 0;
+      var minX = Math.max(0, Math.min(x1, x2) - 2);
+      var minY = Math.max(0, Math.min(y1, y2) - 2);
+      var maxX = Math.min(100, Math.max(x1, x2) + 2);
+      var maxY = Math.min(100, Math.max(y1, y2) + 2);
+      var width = Math.max(1, maxX - minX);
+      var height = Math.max(1, maxY - minY);
+      wrapper.style.left = minX + '%';
+      wrapper.style.top = minY + '%';
+      wrapper.style.width = width + '%';
+      wrapper.style.height = height + '%';
+      var svg = wrapper.querySelector('svg');
+      if (svg) {
+        svg.setAttribute('viewBox', minX + ' ' + minY + ' ' + width + ' ' + height);
+      }
+    }
+
+    function startLineHandleDrag(event) {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+      var handle = event.currentTarget;
+      var wrapper = handle.parentElement;
+      selectAnnotation(wrapper);
+      wrapper.classList.add('dragging-line-handle');
+      var line = wrapper.querySelector('line');
+      var container = document.querySelector('.map-container');
+      var rect = container.getBoundingClientRect();
+      annotationDragState = {
+        element: wrapper,
+        type: 'line-handle',
+        handle: handle.dataset.handle,
+        startX: event.clientX,
+        startY: event.clientY,
+        width: rect.width,
+        height: rect.height,
+        x1: parseFloat(line.getAttribute('x1')) || 0,
+        y1: parseFloat(line.getAttribute('y1')) || 0,
+        x2: parseFloat(line.getAttribute('x2')) || 0,
+        y2: parseFloat(line.getAttribute('y2')) || 0
+      };
+      window.addEventListener('mousemove', handleLineHandleDrag);
+      window.addEventListener('mouseup', stopDrag);
+    }
+
+    function handleLineHandleDrag(event) {
+      if (!annotationDragState || annotationDragState.type !== 'line-handle') {
+        return;
+      }
+      event.preventDefault();
+      var container = document.querySelector('.map-container');
+      var rect = container.getBoundingClientRect();
+      var x = ((event.clientX - rect.left) / rect.width) * 100;
+      var y = ((event.clientY - rect.top) / rect.height) * 100;
+      x = Math.max(0, Math.min(100, x));
+      y = Math.max(0, Math.min(100, y));
+      var element = annotationDragState.element;
+      var line = element.querySelector('line');
+      var handle = annotationDragState.handle;
+      if (handle === 'a') {
+        line.setAttribute('x1', x);
+        line.setAttribute('y1', y);
+      } else {
+        line.setAttribute('x2', x);
+        line.setAttribute('y2', y);
+      }
+      updateLineWrapperBounds(element);
+      updateLineHandlePositions(element);
+    }
+
+    function selectAnnotation(element) {
+      if (selectedAnnotation) {
+        selectedAnnotation.classList.remove('selected');
+      }
+      selectedAnnotation = element;
+      if (selectedAnnotation) {
+        selectedAnnotation.classList.add('selected');
+      }
+    }
+
+    function clearAnnotationSelection() {
+      // remove selected class from any annotation items
+      var selected = document.querySelectorAll('.annotation-item.selected');
+      selected.forEach(function(el) { el.classList.remove('selected'); });
+      selectedAnnotation = null;
+    }
+
+    function startTextDrag(event) {
+      if (event.button !== 0) {
+        return;
+      }
+      var annotation = event.currentTarget;
+      if (annotation.getAttribute('contenteditable') === 'true') {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      selectAnnotation(annotation);
+      var container = document.querySelector('.map-container');
+      var rect = container.getBoundingClientRect();
+      annotationDragState = {
+        element: annotation,
+        type: 'text',
+        startX: event.clientX,
+        startY: event.clientY,
+        left: parseFloat(annotation.style.left) || 0,
+        top: parseFloat(annotation.style.top) || 0,
+        width: rect.width,
+        height: rect.height
+      };
+      window.addEventListener('mousemove', handleTextDrag);
+      window.addEventListener('mouseup', stopDrag);
+    }
+
+    function handleTextDrag(event) {
+      if (!annotationDragState || annotationDragState.type !== 'text') {
+        return;
+      }
+      event.preventDefault();
+      var dx = event.clientX - annotationDragState.startX;
+      var dy = event.clientY - annotationDragState.startY;
+      var percentX = ((annotationDragState.left * annotationDragState.width / 100) + dx) / annotationDragState.width * 100;
+      var percentY = ((annotationDragState.top * annotationDragState.height / 100) + dy) / annotationDragState.height * 100;
+      annotationDragState.element.style.left = Math.max(0, Math.min(100, percentX)) + '%';
+      annotationDragState.element.style.top = Math.max(0, Math.min(100, percentY)) + '%';
+    }
+
+    function startSvgDrag(event) {
+      if (event.button !== 0) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      var annotation = event.currentTarget;
+      selectAnnotation(annotation);
+      var svg = document.querySelector('.annotation-svg');
+      var rect = svg.getBoundingClientRect();
+      var points = [];
+      if (annotation.tagName.toLowerCase() === 'line') {
+        points.push({ x: parseFloat(annotation.getAttribute('x1')), y: parseFloat(annotation.getAttribute('y1')) });
+        points.push({ x: parseFloat(annotation.getAttribute('x2')), y: parseFloat(annotation.getAttribute('y2')) });
+      } else {
+        annotation.getAttribute('points').split(' ').forEach(function(point) {
+          var parts = point.split(',');
+          points.push({ x: parseFloat(parts[0]), y: parseFloat(parts[1]) });
+        });
+      }
+      annotationDragState = {
+        element: annotation,
+        type: 'svg',
+        startX: event.clientX,
+        startY: event.clientY,
+        points: points,
+        width: rect.width,
+        height: rect.height
+      };
+      window.addEventListener('mousemove', handleSvgDrag);
+      window.addEventListener('mouseup', stopDrag);
+    }
+
+    function handleSvgDrag(event) {
+      if (!annotationDragState || annotationDragState.type !== 'svg') {
+        return;
+      }
+      event.preventDefault();
+      var dx = event.clientX - annotationDragState.startX;
+      var dy = event.clientY - annotationDragState.startY;
+      var percentDx = dx / annotationDragState.width * 100;
+      var percentDy = dy / annotationDragState.height * 100;
+      var newPoints = annotationDragState.points.map(function(point) {
+        return {
+          x: Math.max(0, Math.min(100, point.x + percentDx)),
+          y: Math.max(0, Math.min(100, point.y + percentDy))
+        };
+      });
+      var element = annotationDragState.element;
+      if (element.tagName.toLowerCase() === 'line') {
+        element.setAttribute('x1', newPoints[0].x);
+        element.setAttribute('y1', newPoints[0].y);
+        element.setAttribute('x2', newPoints[1].x);
+        element.setAttribute('y2', newPoints[1].y);
+      } else {
+        element.setAttribute('points', newPoints.map(function(point) {
+          return point.x + ',' + point.y;
+        }).join(' '));
+      }
+    }
+
+    function stopDrag() {
+      if (annotationDragState && annotationDragState.type === 'line-handle' && annotationDragState.element) {
+        annotationDragState.element.classList.remove('dragging-line-handle');
+      }
+      window.removeEventListener('mousemove', handleTextDrag);
+      window.removeEventListener('mousemove', handleSvgDrag);
+      window.removeEventListener('mousemove', handleLineHandleDrag);
+      window.removeEventListener('mousemove', handleLineMove);
+      window.removeEventListener('mousemove', handleResize);
+      window.removeEventListener('mouseup', stopDrag);
+      annotationDragState = null;
+    }
+
+    function addResizeHandles(annotation) {
+      ['nw','ne','sw','se'].forEach(function(dir) {
+        var h = document.createElement('div');
+        h.className = 'resize-handle handle-' + dir;
+        h.dataset.dir = dir;
+        h.addEventListener('mousedown', startResize);
+        annotation.appendChild(h);
+      });
+    }
+
+    function startResize(event) {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+      var handle = event.currentTarget;
+      var annotation = handle.parentElement;
+      selectAnnotation(annotation);
+      var container = document.querySelector('.map-container');
+      var rect = container.getBoundingClientRect();
+      annotationDragState = {
+        element: annotation,
+        type: 'resize',
+        dir: handle.dataset.dir,
+        startX: event.clientX,
+        startY: event.clientY,
+        startWidth: annotation.offsetWidth,
+        startHeight: annotation.offsetHeight,
+        containerRect: rect
+      };
+      window.addEventListener('mousemove', handleResize);
+      window.addEventListener('mouseup', stopDrag);
+    }
+
+    function handleResize(event) {
+      if (!annotationDragState || annotationDragState.type !== 'resize') return;
+      event.preventDefault();
+      var s = annotationDragState;
+      var dx = event.clientX - s.startX;
+      var dy = event.clientY - s.startY;
+      var newW = s.startWidth;
+      var newH = s.startHeight;
+      if (s.dir.indexOf('e') !== -1) newW = Math.max(20, s.startWidth + dx);
+      if (s.dir.indexOf('w') !== -1) newW = Math.max(20, s.startWidth - dx);
+      if (s.dir.indexOf('s') !== -1) newH = Math.max(10, s.startHeight + dy);
+      if (s.dir.indexOf('n') !== -1) newH = Math.max(10, s.startHeight - dy);
+
+      // Apply new box size
+      s.element.style.width = newW + 'px';
+      s.element.style.height = newH + 'px';
+
+      // Scale font size proportional to element height so text visually resizes
+      // Factor 0.6 chosen empirically (adjust if needed)
+      try {
+        var fontSize = Math.max(6, Math.round(newH * 0.6));
+        s.element.style.fontSize = fontSize + 'px';
+        s.element.style.lineHeight = '1';
+      } catch (e) {
+        // ignore style errors
+      }
+    }
+
+
+    function promptSetSize() {
+      if (!selectedAnnotation) { alert('Select a text annotation first.'); return; }
+      if (!selectedAnnotation.classList.contains('annotation-text')) { alert('Selected annotation is not text.'); return; }
+      var size = prompt('Enter size in pixels:', parseInt(selectedAnnotation.offsetWidth));
+      if (size) {
+        var px = (parseInt(size) || selectedAnnotation.offsetWidth) + 'px';
+        selectedAnnotation.style.width = px;
+        selectedAnnotation.style.height = px;
+        // Scale font size proportional to new height (same factor as resize handles)
+        var fontSize = Math.max(6, Math.round(parseInt(size) * 0.6));
+        selectedAnnotation.style.fontSize = fontSize + 'px';
+        selectedAnnotation.style.lineHeight = '1';
+      }
+    }
+
+    function deleteSelectedAnnotation() {
+      if (!selectedAnnotation) {
+        alert('Select an annotation first.');
+        return;
+      }
+      selectedAnnotation.remove();
+      selectedAnnotation = null;
+    }
+
+    initAnnotationTools();
+
+    // Function to update official name and title from dropdown
+    function updateOfficial() {
+      var selectElement = document.getElementById('official-select');
+      var selectedOption = selectElement.options[selectElement.selectedIndex];
+      var name = selectedOption.getAttribute('data-name');
+      var title = selectedOption.getAttribute('data-title');
+      
+      if (selectedOption.value === 'custom') {
+        // For custom entry, allow user input
+        name = prompt('Enter Official Name:', name) || name;
+        title = prompt('Enter Official Title:', title) || title;
+      }
+      
+      document.getElementById('sig-name').textContent = name;
+      document.getElementById('sig-title').textContent = title;
+    }
+
+    // Function to update prepared by name and title from dropdown
+    function updatePreparedBy() {
+      var selectElement = document.getElementById('prepared-by-select');
+      var selectedOption = selectElement.options[selectElement.selectedIndex];
+      var name = selectedOption.getAttribute('data-name');
+      var title = selectedOption.getAttribute('data-title');
+      
+      if (selectedOption.value === 'custom') {
+        // For custom entry, allow user input
+        name = prompt('Enter Prepared By Name:', name) || name;
+        title = prompt('Enter Prepared By Title:', title) || title;
+      }
+      
+      document.getElementById('prepared-by-name').textContent = name;
+      document.getElementById('prepared-by-title').textContent = title;
+    }
+
+    // Function to update prepared for name and title from dropdown
+    function updatePreparedFor() {
+      var selectElement = document.getElementById('prepared-for-select');
+      var selectedOption = selectElement.options[selectElement.selectedIndex];
+      var name = selectedOption.getAttribute('data-name');
+      var title = selectedOption.getAttribute('data-title');
+      
+      if (selectedOption.value === 'custom') {
+        // For custom entry, allow user input
+        name = prompt('Enter Prepared For Name:', name) || name;
+        title = prompt('Enter Prepared For Title:', title) || title;
+      }
+      
+      document.getElementById('prepared-for-name').textContent = name;
+      document.getElementById('prepared-for-title').textContent = title;
+    }
+
+    // Intercept Ctrl+P to validate O.R. No before printing
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        e.preventDefault();
+        var orNumber = document.getElementById('or-number').value.trim();
+        if (!orNumber) {
+          alert('O.R. No is required before printing. Please enter the O.R. No.');
+        } else {
+          window.print();
+        }
+      }
+    });
+
+    // Default text values
+    const DEFAULT_CERT_MAIN_TEXT = 'Accompanying is a certified Sketch Plan of Lot No. <strong id="lot-no">4144-B-1</strong> Toledo Cadastre, situated at Barangay <strong id="barangay">Poog</strong>, Toledo City containing an area of <strong id="area">3601</strong> square meters identified in the Tax Mapping Roll as <strong id="pin">PIN 149-00-028-02-011</strong> in the name of <strong id="owner">MA. CHONA R. SIPALAY married to ALLAN SIPALAY</strong>.';
+    const DEFAULT_CERT_REQUEST_TEXT = 'Issued Upon request of <strong id="request-owner">MARIA CHONA SIPALAY</strong> on <strong id="date-issued">April 28, 2026</strong>';
+
+    // Function to handle Ctrl+B for bold text
+    function handleBoldShortcut(event) {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
+        event.preventDefault();
+        // Use native browser bold command for contenteditable
+        document.execCommand('bold', false, null);
+      }
+    }
+
+    // Function to open the override modal
+    function openOverrideModal() {
+      var modal = document.getElementById('overrideModal');
+      var certMainText = document.getElementById('cert-main-text');
+      var certRequestText = document.getElementById('cert-request-text');
+      
+      // Get stored values or use current HTML (to preserve formatting)
+      var mainText = localStorage.getItem('certMainTextOverride') || certMainText.innerHTML;
+      var requestText = localStorage.getItem('certRequestTextOverride') || certRequestText.innerHTML;
+      
+      var mainEditor = document.getElementById('certMainText');
+      var requestEditor = document.getElementById('certRequestText');
+      
+      mainEditor.innerHTML = mainText;
+      requestEditor.innerHTML = requestText;
+      
+      // Add bold shortcut listeners to contenteditable divs
+      mainEditor.addEventListener('keydown', handleBoldShortcut);
+      requestEditor.addEventListener('keydown', handleBoldShortcut);
+      
+      modal.classList.add('show');
+    }
+
+    // Function to close the override modal
+    function closeOverrideModal() {
+      var modal = document.getElementById('overrideModal');
+      modal.classList.remove('show');
+    }
+
+    // Function to save the overridden text
+    function saveOverrideText() {
+      var mainText = document.getElementById('certMainText').innerHTML.trim();
+      var requestText = document.getElementById('certRequestText').innerHTML.trim();
+      
+      if (!mainText || !requestText) {
+        alert('Please fill in both text fields.');
+        return;
+      }
+      
+      // Store in localStorage
+      localStorage.setItem('certMainTextOverride', mainText);
+      localStorage.setItem('certRequestTextOverride', requestText);
+      
+      // Update the displayed text using innerHTML to render HTML tags
+      document.getElementById('cert-main-text').innerHTML = mainText;
+      document.getElementById('cert-request-text').innerHTML = requestText;
+      
+      // Close the modal
+      closeOverrideModal();
+      alert('Text updated successfully!');
+    }
+
+    // Function to reset to default text
+    function resetToDefaults() {
+      if (confirm('Are you sure you want to reset to default text? This cannot be undone.')) {
+        // Clear localStorage
+        localStorage.removeItem('certMainTextOverride');
+        localStorage.removeItem('certRequestTextOverride');
+        
+        // Reset the displayed text using innerHTML
+        document.getElementById('cert-main-text').innerHTML = DEFAULT_CERT_MAIN_TEXT;
+        document.getElementById('cert-request-text').innerHTML = DEFAULT_CERT_REQUEST_TEXT;
+        
+        // Update form fields
+        document.getElementById('certMainText').innerHTML = DEFAULT_CERT_MAIN_TEXT;
+        document.getElementById('certRequestText').innerHTML = DEFAULT_CERT_REQUEST_TEXT;
+        
+        alert('Text has been reset to defaults.');
+      }
+    }
+
+    // Function to load overridden text on page load
+    function loadOverriddenText() {
+      var mainTextOverride = localStorage.getItem('certMainTextOverride');
+      var requestTextOverride = localStorage.getItem('certRequestTextOverride');
+      
+      if (mainTextOverride) {
+        document.getElementById('cert-main-text').innerHTML = mainTextOverride;
+      }
+      
+      if (requestTextOverride) {
+        document.getElementById('cert-request-text').innerHTML = requestTextOverride;
+      }
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+      var modal = document.getElementById('overrideModal');
+      if (event.target === modal) {
+        closeOverrideModal();
+      }
+    });
+
+    // Load overridden text when page initializes
+    var originalInitialize = initializePrintPage;
+    initializePrintPage = function() {
+      originalInitialize();
+      loadOverriddenText();
+    };
+
+    // Function to handle print button and Ctrl+P
+    function handlePrint() {
+      var orNumber = document.getElementById('or-number').value.trim();
+      if (!orNumber) {
+        alert('O.R. No is required before printing. Please enter the O.R. No.');
+      } else {
+        window.print();
+      }
+    }
+
+    // Intercept Ctrl+P to validate O.R. No before printing
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        e.preventDefault();
+        handlePrint();
+      }
+    });
+  </script>
+</body>
+</html>

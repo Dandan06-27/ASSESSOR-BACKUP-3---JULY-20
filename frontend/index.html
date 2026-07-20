@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toledo City Assessor Office</title>
+  <link rel="icon" type="image/x-icon" href="logo.svg">
+  
+  <link rel="stylesheet" href="/styles.css" />
+    <!-- qgis2web / OpenLayers styles -->
+    <link rel="stylesheet" href="/qgis2web_2026_05_26-10_20_18_086523/resources/ol.css" />
+    <link rel="stylesheet" href="/qgis2web_2026_05_26-10_20_18_086523/resources/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="/qgis2web_2026_05_26-10_20_18_086523/resources/ol-layerswitcher.css" />
+    <link rel="stylesheet" href="/qgis2web_2026_05_26-10_20_18_086523/resources/qgis2web.css" />
+    <style>
+      .cadastral-info {
+        display: flex;
+        flex-direction: column;
+        min-height: 280px;
+        max-height: auto;
+      }
+      .cadastral-info table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+      }
+      .cadastral-info th,
+      .cadastral-info td {
+        padding: 0.5rem 0.35rem;
+        vertical-align: top;
+      }
+      .cadastral-info th {
+        text-align: left;
+        font-weight: 700;
+        width: 40%;
+        color: #333;
+      }
+      .cadastral-info tr:nth-child(even) {
+        background: rgba(0, 0, 0, 0.03);
+      }
+      .cadastral-info .hint {
+        margin: 0;
+        color: #666;
+      }
+      .search-results-wrap {
+        overflow: auto;
+        flex: 1;
+      }
+      .pager {
+        flex-shrink: 0;
+      }
+      .qgis-upload-overlay {
+        position: static;
+        display: block;
+        max-width: 380px;
+        width: 100%;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 14px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+        padding: 1rem;
+        font-size: 0.95rem;
+        margin: 1rem 0;
+      }
+      .qgis-upload-overlay label {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+      .qgis-upload-overlay input[type="file"] {
+        width: 100%;
+      }
+      .qgis-upload-overlay button {
+        width: 100%;
+        margin-top: 0.4rem;
+      }
+      .qgis-upload-overlay .status {
+        margin-top: 0.65rem;
+        min-height: 1.2rem;
+      }
+      .qgis-upload-overlay .status.idle {
+        color: #333;
+      }
+      .qgis-upload-overlay .status.loading {
+        color: #0b68c2;
+      }
+      .qgis-upload-overlay .status.success {
+        color: #117a37;
+      }
+      .qgis-upload-overlay .status.error {
+        color: #b00020;
+      }
+      .ol-popup {
+        display: none !important;
+      }
+    </style>
+</head>
+<body>
+  <div id="app">
+    <section id="view-auth" class="view">
+      <div class="auth-split">
+        <div class="auth-hero">
+          <img src="/logo.svg" alt="City Assessor's Office" />
+          <h1>City Assessor's Office</h1>
+          <p class="lead">Enterprise client services, GIS mapping, and auditable land records — Philippine Time (GMT+8).</p>
+          <ul class="hero-list">
+          </ul>
+        </div>
+        <div class="auth-panel-holder">
+          <div class="auth-panel">
+            <div class="auth-card-header">
+              <h2>Sign in</h2>
+              <p>Enter your email and password to access your account.</p>
+            </div>
+            <div class="tabs">
+              <button type="button" class="tab active" data-tab="login">Sign in</button>
+              <button type="button" class="tab" data-tab="register">Register</button>
+            </div>
+          <form id="form-login" class="auth-form">
+            <label>Email<input type="email" name="email" required /></label>
+            <label>Password<input type="password" name="password" required /></label>
+            <button type="submit" class="btn primary">Secure login</button>
+            <p class="auth-toggle">Don't have an account? <button type="button" class="link-btn" data-switch="register">Register</button></p>
+            <p class="hint">New accounts require admin approval before activation.</p>
+          </form>
+          <form id="form-register" class="auth-form hidden">
+            <label>Full name<input type="text" name="fullName" required /></label>
+            <label>Email<input type="email" name="email" required /></label>
+            <label>Password (minimum 8 characters)<input type="password" name="password" required minlength="8" /></label>
+            <label>Confirm password<input type="password" name="confirmPassword" required minlength="8" /></label>
+            <label>Address<textarea name="address" rows="2" required></textarea></label>
+            <div class="terms-block">
+              <label class="checkbox">
+                <input type="checkbox" name="termsConsent" required />
+                <span class="terms-label">Check here to indicate that you have read and agree to the <a href="#" target="_blank">Terms & Conditions</a> and <a href="#" target="_blank">Privacy Policy</a>.</span>
+              </label>
+            </div>
+            <button type="submit" class="btn primary">Submit registration</button>
+            <p class="auth-toggle">Already have an account? <button type="button" class="link-btn" data-switch="login">Login</button></p>
+          </form>
+          <p id="auth-message" class="message"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-app" class="view hidden">
+      <div class="app-layout">
+        <aside class="sidebar" id="app-sidebar">
+          <div class="sidebar-top">
+            <button type="button" id="btn-sidebar-toggle" class="icon-btn sidebar-toggle" aria-label="Toggle sidebar">
+              <span class="menu-icon">☰</span>
+            </button>
+            <div class="brand">
+              <img class="logo" src="/logo.svg" alt="">
+              <div>
+                <strong>Toledo City Assessor's Office</strong>
+                <small id="server-time">—</small>
+              </div>
+            </div>
+          </div>
+
+          <nav class="nav-shortcuts">
+            <button type="button" data-nav="dashboard" class="nav-btn">
+              <span class="nav-btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 11.5 12 4l9 7.5"></path>
+                  <path d="M5.5 10.5V20h13V10.5"></path>
+                  <path d="M9.5 20v-5h5v5"></path>
+                </svg>
+              </span>
+              <span class="nav-btn-label">Dashboard</span>
+            </button>
+            <button type="button" data-nav="records" class="nav-btn">
+              <span class="nav-btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 3h7l4 4v14H7z"></path>
+                  <path d="M14 3v5h5"></path>
+                  <path d="M9 12h6"></path>
+                  <path d="M9 16h4"></path>
+                </svg>
+              </span>
+              <span class="nav-btn-label">Records</span>
+            </button>
+            <button type="button" data-nav="property-records" class="nav-btn">
+              <span class="nav-btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                  <path d="M8 8h8"></path>
+                  <path d="M8 12h8"></path>
+                  <path d="M8 16h5"></path>
+                </svg>
+              </span>
+              <span class="nav-btn-label">Property Records</span>
+            </button>
+            <button type="button" data-nav="view-land" class="nav-btn">
+              <span class="nav-btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 19 8 8l4 6 9-12"></path>
+                  <path d="M21 2h-6"></path>
+                  <path d="M21 2v6"></path>
+                  <path d="M3 19h18"></path>
+                </svg>
+              </span>
+              <span class="nav-btn-label">View land</span>
+            </button>
+            <button type="button" id="nav-add-record" data-nav="add-record" class="nav-btn hidden">
+              <span class="nav-btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 3h7l4 4v14H7z"></path>
+                  <path d="M14 3v5h5"></path>
+                  <path d="M12 10v6"></path>
+                  <path d="M9 13h6"></path>
+                </svg>
+              </span>
+              <span class="nav-btn-label">Add record</span>
+            </button>
+            <button type="button" data-nav="admin" class="nav-btn staff-only hidden">
+              <span class="nav-btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="3"></circle>
+                  <path d="M5 19a7 7 0 0 1 14 0"></path>
+                  <path d="M19 8h2"></path>
+                  <path d="M18 11l1 1"></path>
+                </svg>
+              </span>
+              <span class="nav-btn-label">Administration</span>
+            </button>
+            <button type="button" data-nav="org" class="nav-btn org-only hidden">
+              <span class="nav-btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+                  <rect x="14" y="4" width="6" height="6" rx="1"></rect>
+                  <rect x="4" y="14" width="6" height="6" rx="1"></rect>
+                  <rect x="14" y="14" width="6" height="6" rx="1"></rect>
+                  <path d="M10 7h4"></path>
+                  <path d="M10 17h4"></path>
+                  <path d="M7 10v4"></path>
+                  <path d="M17 10v4"></path>
+                </svg>
+              </span>
+              <span class="nav-btn-label">Org chart</span>
+            </button>
+          </nav>
+
+          <div class="sidebar-footer">
+            </button>
+            <button type="button" id="btn-profile-self" class="user-chip">
+              <img id="self-avatar" src="" alt="" class="avatar sm hidden" />
+              <span id="self-name">User</span>
+            </button>
+            <button type="button" id="btn-logout" class="btn ghost">Logout</button>
+          </div>
+        </aside>
+
+        <main class="main">
+        <section id="page-dashboard" class="page dashboard-page">
+          <div id="map" class="map fullscreen-map">
+            <div id="popup" class="ol-popup">
+              <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+              <div id="popup-content"></div>
+            </div>
+            <div class="map-search-overlay">
+              <form id="form-geocode" class="inline-search">
+                <input type="search" id="map-search" placeholder="Search place in the Philippines…" />
+                <select id="map-search-filter" aria-label="Search filter" style="display:none;">
+                  <option value="any">Any field</option>
+                  <option value="lot">Lot No.</option>
+                  <option value="name">Name</option>
+                  <option value="barangay">Barangay</option>
+                  <option value="pin">PIN</option>
+                  <option value="fid">FID</option>
+                </select>
+                <button type="button" id="map-search-filter-btn" class="filter-btn" aria-haspopup="true" aria-expanded="false" title="Filter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M22 3H2l7 9v7l6-3v-4l7-9z"></path>
+                  </svg>
+                </button>
+                <button type="submit" class="btn small">Search</button>
+              </form>
+            </div>
+
+            <div class="map-zoom-slider" id="map-zoom-slider-container" aria-hidden="false">
+              <input id="map-zoom-slider" type="range" min="0" max="100" value="50" aria-label="Map zoom percent" />
+            </div>
+
+            <div class="cadastral-panel hidden">
+              <div class="card">
+                <h3>At a glance</h3>
+                <button id="parcel-menu-btn" class="cadastral-menu-btn" title="Open parcel page">☰</button>
+                <div id="cadastral-buttons" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; text-align: center;">
+                  <button id="cadastral-print" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; transition: background-color 0.3s ease;">Print Certificate</button>
+                </div>  
+                <div id="cadastral-info" class="cadastral-info">
+                  <p class="hint">Click a cadastral lot on the map to view its attributes here.</p>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="page-add-record" class="page hidden">
+          <div class="page-head topbar">
+            <h2>Add new land record</h2>
+          </div>
+          <form id="form-record" class="form-grid">
+            <fieldset><legend>General information</legend>
+              <label>Assessor's Lot No. *<input name="assessorsLotNo" required /></label>
+              <label>Cadastral Lot No. *<input name="cadastralLotNo" required /></label>
+              <label>FID<input name="fid" /></label>
+              <label>PIN<input name="pin" /></label>
+              <label>Section no.<input name="sectionNo" /></label>
+              <label>TD No.<input name="tdNo" /></label>
+              <label>Conveyance<input name="conveyance" /></label>
+              <label>EFF.<input name="eff" /></label>
+              <label>Barangay *<select name="barangay" id="record-barangay" required></select></label>
+              <label>Declarant<input name="declarant" /></label>
+              <label>New PIN<input name="newPin" /></label>
+            </fieldset>
+            <fieldset><legend>ARP details</legend>
+              <div class="arp-grid">
+                <label>CITY<input name="arpA" /></label>
+                <label>DISTRICT<input name="arpB" /></label>
+                <label>BARANGAY<input name="arpC" /></label>
+                <label>SECTION<input name="arpD" /></label>
+                <label>PARCEL<input name="arpE" /></label>
+                <label>BUILDING / MACHINERY NO.<input name="arpF" /></label>
+              </div>
+            </fieldset>
+            <fieldset><legend>Owner &amp; land info</legend>
+              <label>Name of owner *<input name="nameOfOwner" required /></label>
+              <label>Owner Address<input name="location" /></label>
+              <label>Title No.<input name="titleNo" /></label>
+              <label>Area (sq.m)<input name="areaSqm" type="number" step="0.01" /></label>
+              <label>Classification<select name="classificationCode" id="record-classification"></select></label>
+            </fieldset>
+            <fieldset><legend>Improvements &amp; others</legend>
+              <label>Improvement (# buildings)<input name="improvement" type="number" min="0" value="0" /></label>
+              <label>Building No.<input name="buildingNo" /></label>
+              <label>Mch<input name="mch" /></label>
+              <label>Oth<input name="oth" /></label>
+            </fieldset>
+            <fieldset><legend>Remarks</legend>
+              <label>Encoded remarks<textarea name="remarks" rows="3"></textarea></label>
+            </fieldset>
+            <fieldset><legend>Map pin (optional)</legend>
+              <label>Latitude<input name="latitude" type="number" step="any" /></label>
+              <label>Longitude<input name="longitude" type="number" step="any" /></label>
+            </fieldset>
+            <fieldset><legend>Document</legend>
+              <label>Attach file (stored locally)<input type="file" id="record-file" /></label>
+            </fieldset>
+            <div class="form-actions">
+              <button type="submit" class="btn primary">Save record</button>
+              <p id="record-message" class="message"></p>
+            </div>
+          </form>
+        </section>
+
+        <section id="page-records" class="page hidden">
+          <div class="page-head row topbar">
+            <div>
+              <h2>Records system</h2>
+            </div>
+            <form id="form-records-filter" class="filters">
+              <label>Index<input name="indexNo" /></label>
+              <label>Classification<select name="classificationCode" id="filter-class"></select></label>
+              <label>Barangay<select name="barangay" id="filter-barangay"></select></label>
+              <button type="submit" class="btn small">Apply</button>
+            </form>
+          </div>
+          <div class="overview-grid">
+            <div class="card">
+              <h3>Overview</h3>
+              <dl class="dl-grid">
+                <dt>Total assessor's lots</dt><dd id="ov-lots">—</dd>
+                <dt>Total area (sq.m)</dt><dd id="ov-area">—</dd>
+                <dt>Index numbers</dt><dd id="ov-index">—</dd>
+                <dt>Barangays</dt><dd id="ov-barangay">—</dd>
+              </dl>
+            </div>
+            <div class="card">
+              <h3>Classification</h3>
+              <ul id="ov-class" class="class-list"></ul>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="records-table" id="table-records">
+              <thead>
+                <tr>
+                  <th rowspan="2">Assessor's Lot</th>
+                  <th rowspan="2">Cadastral Lot</th>
+                  <th colspan="6" class="arp-head">ARP</th>
+                  <th rowspan="2">Owner</th>
+                  <th rowspan="2">Title No.</th>
+                  <th rowspan="2">Area (sq.m)</th>
+                  <th rowspan="2">Class</th>
+                  <th rowspan="2">Improvement</th>
+                  <th rowspan="2">Mch</th>
+                  <th rowspan="2">Oth</th>
+                  <th rowspan="2">Actions</th>
+                </tr>
+                <tr class="arp-sub">
+                  <th>City<br><small></small></th>
+                  <th>District<br><small></small></th>
+                  <th>Barangay<br><small></small></th>
+                  <th>Section<br><small></small></th>
+                  <th>Parcel<br><small></small></th>
+                  <th>Bldg/Mch<br><small></small></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="hint">ARP columns span A–F in two header rows as specified.</p>
+        </section>
+
+        <section id="page-view-land" class="page hidden">
+          <div class="page-head row topbar">
+            <div>
+              <h2>View land</h2>
+              <p class="muted">Search by assessor lot, cadastral lot, TD, owner, index; filter by barangay.</p>
+            </div>
+            <form id="form-view-land" class="filters wrap">
+              <label>Assessor lot<input name="assessorsLotNo" /></label>
+              <label>Cadastral lot<input name="cadastralLotNo" /></label>
+              <label>TD No.<input name="tdNo" /></label>
+              <label>Owner<input name="nameOfOwner" /></label>
+              <label>Index<input name="indexNo" /></label>
+              <label>Barangay<select name="barangay" id="view-barangay"></select></label>
+              <button type="submit" class="btn small">Search</button>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Results</h3>
+            <div class="table-wrap">
+              <table class="simple-table" id="table-view-land">
+                <thead>
+                  <tr>
+                    <th>Assessor ID</th>
+                    <th>Cadastral Lot</th>
+                    <th>TD No.</th>
+                    <th>Owner</th>
+                    <th>Index</th>
+                    <th>View Parcel</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+          <section id="page-property-records" class="page hidden">
+            <div class="page-head row topbar">
+              <div>
+                <h2>Property Records</h2>
+                <p class="muted">All encoded RPU records — <span id="proprec-count">0</span> total entry</p>
+              </div>
+              <div style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
+                <button type="button" id="export-excel-property" class="btn">Export Excel</button>
+                <button type="button" id="print-property" class="btn">Print</button>
+                <button type="button" id="add-rpu-btn" class="btn primary"><strong>+ Add RPU</strong></button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.75rem;">
+                <input id="proprec-search" placeholder="Search by barangay, lot number, ARP, title..." style="flex:1; padding:0.5rem; border-radius:6px; border:1px solid #e2dede;" />
+                <div id="proprec-summary" class="muted">1 record</div>
+              </div>
+
+              <div class="table-wrap">
+                <table class="simple-table" id="table-property-records">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>BARANGAY</th>
+                      <th>LOT NO.</th>
+                      <th>ARP NO.</th>
+                      <th>TITLE NO.</th>
+                      <th>REF. POINT</th>
+                      <th>DISTANCE</th>
+                      <th>DEGREE</th>
+                      <th>MINUTES</th>
+                      <th>TECHNICAL DESCRIPTION</th>
+                      <th>ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+        <section id="page-admin" class="page hidden">
+          <div class="page-head topbar">
+            <h2>Administration</h2>
+            <p class="muted">Approve accounts, assign roles (admin roles require secret key), deactivate users, audit logs.</p>
+          </div>
+          <div class="card">
+            <h3>Upload QGIS2web dataset</h3>
+            <div class="qgis-upload-overlay" id="qgis-upload-overlay">
+              <label for="qgis-upload-file">Upload QGIS2web package</label>
+              <input id="qgis-upload-file" type="file" accept=".zip" aria-label="QGIS2web dataset archive" />
+              <button type="button" id="qgis-upload-button" class="btn small">Load dataset</button>
+              <div class="status idle" id="qgis-upload-status">Idle</div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Pending approvals</h3>
+              <ul id="list-pending" class="user-list"></ul>
+            </div>
+            <div class="card">
+              <h3>All users</h3>
+              <ul id="list-users" class="user-list"></ul>
+            </div>
+            <div class="card wide staff-only hidden" id="audit-card">
+              <h3>Audit trail</h3>
+              <div class="table-wrap short">
+                <table class="simple-table" id="table-audit"><thead><tr><th>When (PH)</th><th>User</th><th>Action</th><th>Entity</th></tr></thead><tbody></tbody></table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="page-org" class="page hidden">
+          <div class="page-head topbar">
+            <h2>Organizational chart</h2>
+            <p class="muted">Super Admin &amp; Assistant Admin only. Promote roles and adjust reporting lines.</p>
+          </div>
+          <div id="org-tree" class="org-tree"></div>
+        </section>
+      </main>
+    </div>
+    </section>
+  </div>
+
+  <div id="bulk-delete-overlay" class="bulk-delete-overlay hidden" role="dialog" aria-live="polite">
+    <div class="bulk-delete-card">
+      <div class="bulk-delete-summary">
+        <strong id="bulk-delete-count">0 selected</strong>
+        <span class="bulk-delete-hint">Check items to delete</span>
+      </div>
+      <div class="bulk-delete-actions">
+        <button type="button" class="btn ghost small" id="bulk-select-all">Select all</button>
+        <button type="button" class="btn danger small" id="bulk-delete-action">Delete selected</button>
+        <button type="button" class="btn ghost small" id="bulk-clear-selection">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-profile" class="modal hidden">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+      <div class="profile-header">
+        <button type="button" id="profile-avatar-btn" class="avatar-btn">
+          <img id="profile-avatar" src="" alt="" class="avatar lg" />
+        </button>
+        <div>
+          <h3 id="profile-name">—</h3>
+          <p id="profile-meta" class="muted">—</p>
+          <span id="profile-status" class="pill">—</span>
+        </div>
+      </div>
+      <dl class="profile-dl">
+        <dt>Email</dt><dd id="profile-email">—</dd>
+        <dt>Contact</dt><dd id="profile-contact">—</dd>
+        <dt>Address</dt><dd id="profile-address">—</dd>
+        <dt>About</dt><dd id="profile-bio">—</dd>
+      </dl>
+      <div class="profile-actions">
+        <a id="profile-message" class="btn secondary" href="#">Send message</a>
+        <button type="button" id="profile-tasks" class="btn primary">View tasks</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-view-rpu" class="modal hidden">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+      <h3>RPU Record</h3>
+      <div id="view-rpu-body"></div>
+    </div>
+  </div>
+
+  <div id="modal-record-details" class="modal hidden">
+    <div class="modal-dialog wide record-details-modal">
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+      <div class="record-details-header">
+        <h3 id="record-details-title">Record details</h3>
+        <p id="record-details-subtitle" class="muted">Full parcel record and linked layer information</p>
+      </div>
+      <div id="record-details-body" class="record-details-body"></div>
+    </div>
+  </div>
+
+  <div id="modal-tasks" class="modal hidden">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+      <h3>Tasks</h3>
+      <ul id="task-list" class="list-compact"></ul>
+    </div>
+  </div>
+
+  <div id="modal-role" class="modal hidden">
+    <div class="modal-dialog small">
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+      <h3>Assign role</h3>
+      <form id="form-role">
+        <input type="hidden" name="userId" />
+        <label>Role<select class="form-control" name="role" required>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+          <option value="assistant_admin">Assistant Admin</option>
+        </select></label>
+        <p><label>Admin secret key<input class="form-control" name="adminSecretKey" type="password" required autocomplete="off" /></label></p>
+        <label>Division<select class="form-control" name="divisionId" id="role-division"></select></label>
+        <p><button type="submit" class="btn primary">Confirm assignment</button></p>
+        <p id="role-message" class="message"></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-rpu" class="modal hidden">
+    <div class="modal-dialog wide">
+      <button type="button" class="modal-close" data-close-modal>&times;</button>
+      <div class="page-head row">
+        <div>
+          <h2>New RPU Record</h2>
+          <p class="muted">Enter parcel identity, reference points, and mapping data</p>
+        </div>
+      </div>
+
+      <form id="form-rpu">
+        <fieldset class="rpu-section"><legend>1 Parcel Identity</legend>
+          <div class="rpu-grid-4">
+            <label>Barangay *<select name="barangay" id="rpu-barangay" required></select></label>
+            <label>Lot Number *<input name="lotNumber" placeholder="e.g. Lot 123" required /></label>
+            <label>ARP Number *<input name="arpNumber" placeholder="e.g. 001-001" required /></label>
+            <label>Title Number *<input name="titleNumber" placeholder="e.g. TCT-001" required /></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="rpu-section"><legend>2 Reference Point &amp; Tie Line</legend>
+          <label>Reference Point *<input name="refPoint" placeholder="e.g. BLLM1" required /></label>
+          <div class="rpu-card">
+            <div class="rpu-card-title">Tie line measurements</div>
+            <div class="rpu-grid-3">
+              <label>Distance (m) *<input name="tie_distance" placeholder="0.00<" required /></label>
+              <label>Degrees *<input name="tie_degrees" placeholder="0–360D" required /></label>
+              <label>Minutes *<input name="tie_minutes" placeholder="0–59'E" required /></label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="rpu-section"><legend>3 Technical Description</legend>
+          <div id="rpu-tech-rows"></div>
+          <p><button type="button" id="rpu-add-row" class="btn ghost">+ Add Another Row</button></p>
+        </fieldset>
+
+
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1rem;">
+          <button type="button" class="btn ghost" data-close-modal>Cancel</button>
+          <button type="submit" class="btn primary">Save RPU Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin=""></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/resources/qgis2web_expressions.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/resources/functions.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/resources/ol.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/resources/ol-layerswitcher.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/resources/olms.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/layers/CADASTRALCLAIMANTS_1.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/styles/CADASTRALCLAIMANTS_1_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/AREAFEATURES_0.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/BRGYBOUNDARY2_1.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/CEBECOPOST_2.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/ATLSTENEMENTPERBATGY_3.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/BARANGAYPARTITION_4.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/LINEFEATURES_5.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/PHLADM3_6.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/PSABUILDINGFOOTPRINT_7.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/TOLEDOPARCELS_8.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/TOLEDOBASESHAPE_9.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/layers/TOLEDOLANDUSEFINAL_10.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/AREAFEATURES_0_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/ATLSTENEMENTPERBATGY_3_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/BARANGAYPARTITION_4_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/BRGYBOUNDARY2_1_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/CEBECOPOST_2_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/LINEFEATURES_5_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/PHLADM3_6_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/PSABUILDINGFOOTPRINT_7_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/TOLEDOBASESHAPE_9_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/TOLEDOLANDUSEFINAL_10_style.js"></script>
+  <script src="/qgis2web_2026_05_28-10_54_02_843383/styles/TOLEDOPARCELS_8_style.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/layers/layers.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/resources/Autolinker.min.js"></script>
+  <script src="/qgis2web_2026_05_26-10_20_18_086523/resources/qgis2web.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

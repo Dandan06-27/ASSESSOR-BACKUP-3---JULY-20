@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Toledo City Assessor - Tracer</title>
+  <link rel="stylesheet" href="./tracer.css">
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search || '');
+        if (params.get('embed') === 'chart') {
+          // add marker class to root element so CSS can hide chrome
+          document.documentElement.classList.add('embed-chart');
+        }
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">Toledo City Assessor - Tracer</div>
+    <div class="controls">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11" cy="11" r="6" stroke="#9CA3AF" stroke-width="2"></circle></svg>
+        <input id="searchInput" placeholder="Search by name or classification..." />
+      </div>
+      <button class="btn" id="resetView">Reset</button>
+      <button class="btn secondary" id="openLegend">Legend</button>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <div class="toolbar">
+      <div class="tool" id="scrollUp">▲</div>
+      <div class="tool" id="scrollDown">▼</div>
+      <div class="tool" id="fit">⤢</div>
+    </div>
+
+    <div id="chart-wrap" style="width:100%;height:100%;position:relative;">
+      <div id="chart" class="chart">
+        <!-- Tree will be injected here -->
+      </div>
+    </div>
+
+    <aside id="sidebar" class="sidebar" aria-hidden="true">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="h">Details</div>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <button id="tracer-print" class="btn secondary" style="background-color:#4CAF50;color:#fff;border-color:rgba(37,99,235,0.12);">Print Tracer</button>
+          <button id="closeSidebar" class="btn secondary">Close</button>
+        </div>
+      </div>
+      <div id="details"></div>
+      <div id="sidebarFooter" class="sidebar-footer hidden">
+        <button id="fuseNodeSidebarBtn" class="btn secondary">Mark for fuse</button>
+        <button id="addPartitionSidebarBtn" class="btn">Add Partition</button>
+      </div>
+    </aside>
+
+    <div id="deleteModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+      <div class="modal-panel">
+        <h2 id="deleteModalTitle">Enter Passkey</h2>
+        <p class="modal-text">Please enter the passkey to delete this node.</p>
+        <form id="deleteModalForm">
+          <input id="deletePasskeyInput" type="password" placeholder="Enter your passkey" autocomplete="off" />
+          <div class="error" aria-live="polite"></div>
+          <div class="modal-actions">
+            <button type="button" id="cancelDeleteBtn" class="btn secondary">Cancel</button>
+            <button type="submit" class="btn">Confirm</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="addPartitionModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="add-partition-title">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <h2 id="add-partition-title">ADD PARTITION FORM</h2>
+          <button type="button" class="modal-close" aria-label="Close add partition form">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="addPartitionForm" class="form-grid">
+            <fieldset><legend>General information</legend>
+              <label>Assessor's Lot No. *<input name="assessorsLotNo" required /></label>
+              <label>Cadastral Lot No. *<input name="cadastralLotNo" required /></label>
+              <label>FID<input name="fid" /></label>
+              <label>PIN<input name="pin" /></label>
+              <label>Section no.<input name="sectionNo" /></label>
+              <label>TD No.<input name="tdNo" /></label>
+              <label>Conveyance<input name="conveyance" /></label>
+              <label>EFF.<input name="eff" /></label>
+              <label>Barangay *<select name="barangay" id="record-barangay" required>
+                <option value="">Select barangay</option>
+              </select></label>
+              <label>Declarant<input name="declarant" /></label>
+              <label>New PIN<input name="newPin" /></label>
+            </fieldset>
+            <fieldset><legend>ARP details</legend>
+              <div class="arp-grid">
+                <label>CITY<input name="arpA" readonly /></label>
+                <label>DISTRICT<input name="arpB" readonly /></label>
+                <label>BARANGAY<input name="arpC" readonly /></label>
+                <label>SECTION<input name="arpD" /></label>
+                <label>PARCEL<input name="arpE" /></label>
+                <label>BUILDING / MACHINERY NO.<input name="arpF" /></label>
+              </div>
+            </fieldset>
+            <fieldset><legend>Owner & land info</legend>
+              <label>Name of owner *<input name="nameOfOwner" required /></label>
+              <label>Location<input name="location" /></label>
+              <label>Title No.<input name="titleNo" /></label>
+              <label>Area (sq.m)<input name="areaSqm" type="number" step="0.01" /></label>
+              <label>Classification<select name="classificationCode" id="record-classification"></select></label>
+            </fieldset>
+            <fieldset><legend>Improvements & others</legend>
+              <label>Improvement (# buildings)<input name="improvement" type="number" min="0" value="0" /></label>
+              <label>Building No.<input name="buildingNo" /></label>
+              <label>Machinery<input name="mch" /></label>
+              <label>Others<input name="oth" /></label>
+            </fieldset>
+            <div class="form-actions">
+              <button type="submit" class="btn">Save record</button>
+              <button type="button" id="cancelAddPartitionBtn" class="btn secondary">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./qgis2web_2026_05_26-10_20_18_086523/layers/CADASTRALCLAIMANTS_1.js"></script>
+<script src="./layers/TOLEDOPARCELS_0.js"></script>
+<script src="./tracer.js"></script>
+
+</body>
+</html>

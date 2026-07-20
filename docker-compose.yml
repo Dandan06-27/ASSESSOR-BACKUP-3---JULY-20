@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: landbook_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: landbook
+      POSTGRES_PASSWORD: landbook_secret
+      POSTGRES_DB: land_bookkeeping
+      TZ: Asia/Manila
+    ports:
+      - "5432:5432"
+    volumes:
+      - landbook_pg_data:/var/lib/postgresql/data
+
+  qgis-server:
+    image: qgis/qgis-server:3.44
+    container_name: landbook_qgis_server
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    volumes:
+      - ./qgis_projects:/srv/qgis/projects:ro
+      - 'C:/QGIS - COPY:/QGIS - COPY:ro'
+      - 'C:/IBARRA:/IBARRA:ro'
+    environment:
+      QGIS_PROJECT_FILE: /srv/qgis/projects/landbook.qgs
+      QGIS_SERVER_LOG_LEVEL: 1
+      QGIS_SERVER_LISTEN: 0.0.0.0
+      QGIS_DEBUG: 1
+
+volumes:
+  landbook_pg_data:

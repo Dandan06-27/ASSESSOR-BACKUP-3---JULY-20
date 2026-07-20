@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toledo City Assessor Parcel</title>
+  <link rel="icon" type="image/x-icon" href="logo.svg">
+  <link rel="stylesheet" href="parcel.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="page-header">
+      <div class="page-header__branding">
+        <div class="site-brand">
+          <div class="site-brand__label">Toledo City Assessor Office</div>
+          <div class="site-brand__sub">Parcel Information</div>
+        </div>
+        <div class="parcel-hero">
+          <div class="parcel-hero__id">000-000-000-000</div>
+          <div class="parcel-hero__location">&nbsp;</div>
+        </div>
+      </div>
+
+      <div class="action-links">
+        <a href="#" id="add-partition-link">Add Partition</a>
+      </div>
+
+      <div class="page-summary">
+        <p>This is a residential parcel located at <span class="summary-value" data-summary="location">&nbsp;</span>.</p>
+        <p>The current owner is <span class="summary-value" data-summary="owner">&nbsp;</span>.</p>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <section class="section card" id="property-section">
+        <h2>PROPERTY INFORMATION</h2>
+        <div class="field-grid">
+          <div class="field-row"><span class="label">FID</span><span class="value" data-field="fid">&nbsp;</span></div>
+          <div class="field-row"><span class="label">PIN</span><span class="value" data-field="PIN">&nbsp;</span></div>
+          <div class="field-row"><span class="label">SERVER-PIN</span><span class="value" data-field="SERVER PIN">&nbsp;</span></div>
+          <div class="field-row"><span class="label">BARANGAY</span><span class="value" data-field="Assessors Data_Barangay">&nbsp;</span></div>
+          <div class="field-row"><span class="label">SECTION NO.</span><span class="value" data-field="Assessors Data_SectionNo">&nbsp;</span></div>
+          <div class="field-row"><span class="label">CADASTRAL SURVEY NO.</span><span class="value" data-field="Assessors Data_CadastralSurveyNo">&nbsp;</span></div>
+          <div class="field-row"><span class="label">TITLE NO.</span><span class="value" data-field="Assessors Data_Title No.">&nbsp;</span></div>
+          <div class="field-row"><span class="label">DECLARATION NO.</span><span class="value" data-field="Assessors Data_DeclarationNo">&nbsp;</span></div>
+          <div class="field-row"><span class="label">PARCEL NO.</span><span class="value" data-field="Assessors Data_PARCEL NO">&nbsp;</span></div>
+          <div class="field-row"><span class="label">SERVER PIN</span><span class="value" data-field="Assessors Data_SERVER PIN">&nbsp;</span></div>
+          <div class="field-row"><span class="label">TOTAL AREA</span><span class="value" data-field="Assessors Data_TotalArea">&nbsp;</span></div>
+          <div class="field-row"><span class="label">UNIT</span><span class="value" data-field="Assessors Data_Unit">&nbsp;</span></div>
+          <div class="field-row"><span class="label">TOTAL MARKET VALUE</span><span class="value" data-field="Assessors Data_TotalMarketValue">&nbsp;</span></div>
+          <div class="field-row"><span class="label">TOTAL ASSESSED VALUE</span><span class="value" data-field="Assessors Data_TotalAssessedValue">&nbsp;</span></div>
+          <div class="field-row"><span class="label">CLASSIFICATION</span><span class="value" data-field="Assessors Data_ActualUseName">&nbsp;</span></div>
+        </div>
+      </section>
+
+      <section class="section card">
+        <h2>OWNER INFORMATION</h2>
+        <div class="field-grid">
+          <div class="field-row"><span class="label">DISPLAY NAME</span><span class="value" data-field="Assessors Data_DisplayName">&nbsp;</span></div>
+          <div class="field-row"><span class="label">OWNER ADDRESS</span><span class="value" data-field="Assessors Data_OwnerAddress">&nbsp;</span></div>
+        </div>
+      </section>
+
+        <section class="section card cadastral-card hidden" id="cadastral-card" aria-hidden="true">
+          <h2>CADASTRAL LOT</h2>
+          <div class="field-grid">
+            <div class="field-row"><span class="label">LOT NUMBER</span><span class="value" data-field="cadastral_LOT_NUMBER">&nbsp;</span></div>
+            <div class="field-row"><span class="label">BARANGAY</span><span class="value" data-field="cadastral_BARANGAY">&nbsp;</span></div>
+            <div class="field-row"><span class="label">LAST NAME</span><span class="value" data-field="cadastral_LAST_NAME">&nbsp;</span></div>
+            <div class="field-row"><span class="label">FIRST NAME</span><span class="value" data-field="cadastral_FIRST_NAME">&nbsp;</span></div>
+            <div class="field-row"><span class="label">SECTION</span><span class="value" data-field="cadastral_SECTION">&nbsp;</span></div>
+            <div class="field-row"><span class="label">AREA (m²)</span><span class="value" data-field="cadastral_AREA">&nbsp;</span></div>
+            <div class="field-row"><span class="label">REMARKS</span><span class="value" data-field="cadastral_REMARKS">&nbsp;</span></div>
+          </div>
+        </section>
+    </main>
+    <section class="section card" id="tracer-section">
+      <h2>TRACER</h2>
+      <div class="tracer-intro">Hierarchy chart of the Land Partition</div>
+      <div id="tracer-hierarchy" class="tracer-hierarchy" aria-live="polite">
+        <!-- Placeholder: rendered hierarchy chart goes here -->
+      </div>
+    </section>
+  </div>
+
+  <div id="tracer-node-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="tracer-node-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="tracer-node-title">Partition Record</h2>
+        <button type="button" class="modal-close" data-modal="tracer-node-modal" aria-label="Close partition record">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="tracer-node-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="add-partition-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="add-partition-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="add-partition-title">Add partition</h2>
+        <button type="button" class="modal-close" aria-label="Close add partition form">×</button>
+      </div>
+      <div class="modal-body">
+        <section id="page-add-record" class="page">
+          <div class="page-head">
+            <h2>Add new land record</h2>
+          </div>
+          <form id="form-record" class="form-grid">
+            <fieldset><legend>General information</legend>
+              <label>Assessor's Lot No. *<input name="assessorsLotNo" required /></label>
+              <label>Cadastral Lot No. *<input name="cadastralLotNo" required /></label>
+              <label>TD No.<input name="tdNo" /></label>
+              <label>Conveyance<input name="conveyance" /></label>
+              <label>EFF.<input name="eff" /></label>
+              <label>Barangay *<select name="barangay" id="record-barangay" required></select></label>
+              <label>Location<input name="location" /></label>
+              <label>Declarant<input name="declarant" /></label>
+              <label>New PIN<input name="newPin" /></label>
+            </fieldset>
+            <fieldset><legend>ARP details</legend>
+              <div class="arp-grid">
+                <label>CITY<input name="arpA" /></label>
+                <label>DISTRICT<input name="arpB" /></label>
+                <label>BARANGAY<input name="arpC" /></label>
+                <label>SECTION<input name="arpD" /></label>
+                <label>PARCEL<input name="arpE" /></label>
+                <label>BUILDING / MACHINERY NO.<input name="arpF" /></label>
+              </div>
+            </fieldset>
+            <fieldset><legend>Owner &amp; land info</legend>
+              <label>Name of owner *<input name="nameOfOwner" required /></label>
+              <label>Title No.<input name="titleNo" /></label>
+              <label>Area (sq.m)<input name="areaSqm" type="number" step="0.01" /></label>
+              <label>Classification<select name="classificationCode" id="record-classification"></select></label>
+            </fieldset>
+            <fieldset><legend>Improvements &amp; others</legend>
+              <label>Improvement (# buildings)<input name="improvement" type="number" min="0" value="0" /></label>
+              <label>Building No.<input name="buildingNo" /></label>
+              <label>Machinery<input name="mch" /></label>
+              <label>Others<input name="oth" /></label>
+            </fieldset>
+            <div class="form-actions">
+              <button type="submit" class="btn primary">Save record</button>
+              <p id="record-message" class="message"></p>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <div class="footer-brand">
+      <img src="/logo.svg" alt="Assessor logo" class="footer-logo" />
+      <div class="footer-brand__title">STAY CONNECTED</div>
+      <div class="footer-social">
+        <a href="https://www.facebook.com/ToledoCityPIO" aria-label="Facebook">
+          <svg width="10" height="10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill="#ffffff" d="M22 12C22 6.477 17.523 2 12 2S2 6.477 2 12c0 5.007 3.676 9.15 8.438 9.878v-6.99H7.898v-2.888h2.54V9.797c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.242 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.888h-2.33v6.99C18.324 21.15 22 17.007 22 12z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-column">
+      <div class="footer-column__title">STAY CURRENT</div>
+      <a href="https://toledocity.net/About">About Toledo</a>
+      <a href="https://toledocity.net/Government">City Officials</a>
+      <a href="https://toledocity.net/Services">City Services</a>
+      <a href="https://toledocity.net/News">News & Updates</a>
+      <a href="https://toledocity.net/Tourism">Tourism</a>
+    </div>
+
+    <div class="footer-column footer-contact">
+      <div class="footer-column__title">CONTACT US</div>
+      <p>Office hours: Mon - Fri 8am - 5pm</p>
+      <p>Toledo City Hall, Poblacion, Toledo City, Cebu 6038, Philippines </p>
+      <p>(032) 467-8000</p>
+    </div>
+  </footer>
+  <script>
+    (function() {
+      function getBarangayFromPin(pin) {
+        if (!pin || typeof pin !== 'string') return '';
+        var parts = pin.replace(/\s+/g, '').split('-');
+        if (parts.length < 3) return '';
+        var map = {
+          '001': 'POBLACION',
+          '002': 'AWIHAO',
+          '003': 'BAGAKAY',
+          '004': 'BATO',
+          '005': 'BIGA',
+          '006': 'BULONGAN',
+          '007': 'BUNGA',
+          '008': 'CABITOONAN',
+          '009': 'CALONG-CALONG',
+          '010': 'CAMBANG-UG',
+          '011': 'CAMPO 8',
+          '012': 'CANLULAMPAO',
+          '013': 'CANTABACO',
+          '014': 'CAPT. CLAUDIO',
+          '015': 'CARMEN',
+          '016': 'DAS',
+          '017': 'DUMLOG',
+          '018': 'GEN. CLIMACO',
+          '019': 'IBO',
+          '020': 'ILIHAN',
+          '021': 'LANDAHAN',
+          '022': 'LOAY',
+          '023': 'LURAY II',
+          '024': 'MAGDUGO',
+          '025': 'MATAB-ANG',
+          '026': 'MEDIA-ONCE',
+          '027': 'PANGAMIHAN',
+          '028': 'POOG',
+          '029': 'PUTINGBATO',
+          '030': 'SAGAY',
+          '031': 'SAM-ANG',
+          '032': 'SANGI',
+          '033': 'STO, NIÑO',
+          '034': 'SUBAYON',
+          '035': 'TALAVERA',
+          '036': 'TUBOD',
+          '037': 'TUNGKAY',
+          '038': 'DAANLUNGSOD'
+        };
+        return map[parts[2]] || '';
+      }
+
+      var raw = sessionStorage.getItem('parcelRedirectData');
+      // If no live session data, allow a debug simulator via URL: ?debug_cadastral=1
+      if (!raw) {
+        try {
+          var params = new URLSearchParams(window.location.search || '');
+          if (params.get('debug_cadastral') === '1') {
+            var sample = {
+              'PIN': '0000-00-002-00-000-0000',
+              'Assessors Data_PARCEL NO': 'LOT-123',
+              'Assessors Data_Barangay': '',
+              'Assessors Data_LastName': 'Dela Cruz',
+              'Assessors Data_FirstName': 'Juan',
+              'Assessors Data_SectionNo': 'A-1',
+              'Assessors Data_TotalArea': '256.4',
+              'Assessors Data_Remarks': 'Sample cadastral lot for testing',
+              'Assessors Data_DisplayName': 'Dela Cruz, Juan'
+            };
+            raw = JSON.stringify(sample);
+          }
+        } catch (eDebug) {
+          console.warn('Debug param check failed:', eDebug);
+        }
+      }
+      if (!raw) return;
+      try {
+        var data = JSON.parse(raw);
+        var mappings = {
+          'fid': 'fid',
+          'PIN': 'PIN',
+          'SERVER PIN': 'SERVER PIN',
+          'Assessors Data_Barangay': 'Assessors Data_Barangay',
+          'Assessors Data_SectionNo': 'Assessors Data_SectionNo',
+          'Assessors Data_CadastralSurveyNo': 'Assessors Data_CadastralSurveyNo',
+          'Assessors Data_Title No.': 'Assessors Data_Title No.',
+          'Assessors Data_DeclarationNo': 'Assessors Data_DeclarationNo',
+          'Assessors Data_PARCEL NO': 'Assessors Data_PARCEL NO',
+          'Assessors Data_SERVER PIN': 'Assessors Data_SERVER PIN',
+          'Assessors Data_TotalArea': 'Assessors Data_TotalArea',
+          'Assessors Data_Unit': 'Assessors Data_Unit',
+          'Assessors Data_TotalMarketValue': 'Assessors Data_TotalMarketValue',
+          'Assessors Data_TotalAssessedValue': 'Assessors Data_TotalAssessedValue',
+          'Assessors Data_ActualUseName': 'Assessors Data_ActualUseName',
+          'Assessors Data_DisplayName': 'Assessors Data_DisplayName',
+          'Assessors Data_OwnerAddress': 'Assessors Data_OwnerAddress'
+        };
+
+        Object.keys(mappings).forEach(function(field) {
+          var selector = '[data-field="' + field.replace(/"/g, '\\"') + '"]';
+          var el = document.querySelector(selector);
+          if (!el) return;
+          var value = data[mappings[field]];
+          if (value === null || value === undefined) value = '';
+          if (Array.isArray(value)) value = value.join(', ');
+          else if (typeof value === 'object') value = JSON.stringify(value);
+          el.textContent = String(value);
+        });
+
+        if (shouldHidePropertySection(data)) {
+          var composedName = composeOwnerDisplayName(data);
+          if (composedName) {
+            var ownerNameField = document.querySelector('[data-field="Assessors Data_DisplayName"]');
+            if (ownerNameField) {
+              ownerNameField.textContent = composedName;
+            }
+          }
+        }
+
+        var barangay = data['Assessors Data_Barangay'] || '';
+        if (!barangay) {
+          var pinValue = data['PIN'] || data['SERVER PIN'] || data['pin'] || data['server pin'] || '';
+          barangay = getBarangayFromPin(String(pinValue));
+          if (barangay) {
+            var barangayEl = document.querySelector('[data-field="Assessors Data_Barangay"]');
+            if (barangayEl) {
+              barangayEl.textContent = barangay;
+            }
+          }
+        }
+
+        var locationEl = document.querySelector('[data-summary="location"]');
+        if (locationEl) {
+          locationEl.textContent = barangay || data['Assessors Data_DisplayName'] || '';
+        }
+        var ownerEl = document.querySelector('[data-summary="owner"]');
+        if (ownerEl) {
+          var ownerDisplayName = data['Assessors Data_DisplayName'] || '';
+          if (shouldHidePropertySection(data)) {
+            ownerDisplayName = composeOwnerDisplayName(data);
+          }
+          ownerEl.textContent = ownerDisplayName;
+        }
+
+        var heroId = document.querySelector('.parcel-hero__id');
+        if (heroId) {
+          heroId.textContent = data['PIN'] || data['fid'] || '';
+        }
+
+        // helper to normalize lookup keys
+        function normalizeKey(key) {
+          return String(key || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+        }
+
+        function resolveField(obj, variants) {
+          var normalized = {};
+          Object.keys(obj).forEach(function(k) {
+            normalized[normalizeKey(k)] = obj[k];
+          });
+
+          for (var i = 0; i < variants.length; i++) {
+            var norm = normalizeKey(variants[i]);
+            if (normalized.hasOwnProperty(norm)) {
+              var value = normalized[norm];
+              if (value !== null && value !== undefined && String(value).trim() !== '') return value;
+            }
+          }
+
+          for (var key in normalized) {
+            if (!normalized.hasOwnProperty(key)) continue;
+            for (var j = 0; j < variants.length; j++) {
+              if (key.indexOf(normalizeKey(variants[j])) !== -1) {
+                var value = normalized[key];
+                if (value !== null && value !== undefined && String(value).trim() !== '') return value;
+              }
+            }
+          }
+
+          return '';
+        }
+
+        function hasCadastralIdentifier(obj) {
+          return !!resolveField(obj, ['Assessors Data_CadastralSurveyNo','Assessors Data_PARCEL NO','LOT NUMBER','lot','parcel_no','CadastralSurveyNo']);
+        }
+
+        function shouldHideCadastralCard(obj) {
+          return !!resolveField(obj, ['PIN','pin','SERVER PIN','Server Pin','server pin']);
+        }
+
+        function shouldHidePropertySection(obj) {
+          return !resolveField(obj, ['PIN','pin','SERVER PIN','Server Pin','server pin']);
+        }
+
+        function composeOwnerDisplayName(obj) {
+          var first = resolveField(obj, ['Assessors Data_FirstName','FIRST NAME','first_name','firstname','Assessors Data_First Name']);
+          var last = resolveField(obj, ['Assessors Data_LastName','LAST NAME','last_name','lastname','Assessors Data_Last Name']);
+          if (first && last) return first + ' ' + last;
+          if (first) return first;
+          if (last) return last;
+          return resolveField(obj, ['Assessors Data_DisplayName','DisplayName','displayname']);
+        }
+
+        function getBarangayFromPin(pin) {
+          if (!pin || typeof pin !== 'string') return '';
+          var cleaned = pin.replace(/\s+/g, '').replace(/_/g, '-');
+          var parts = cleaned.split('-');
+          if (parts.length < 3) return '';
+          var code = String(parts[2] || '').replace(/^0+/, '');
+          if (!code) code = String(parts[2] || '');
+          code = code.padStart(3, '0');
+          var map = {
+            '001': 'POBLACION',
+            '002': 'AWIHAO',
+            '003': 'BAGAKAY',
+            '004': 'BATO',
+            '005': 'BIGA',
+            '006': 'BULONGAN',
+            '007': 'BUNGA',
+            '008': 'CABITOONAN',
+            '009': 'CALONG-CALONG',
+            '010': 'CAMBANG-UG',
+            '011': 'CAMPO 8',
+            '012': 'CANLULAMPAO',
+            '013': 'CANTABACO',
+            '014': 'CAPT. CLAUDIO',
+            '015': 'CARMEN',
+            '016': 'DAS',
+            '017': 'DUMLOG',
+            '018': 'GEN. CLIMACO',
+            '019': 'IBO',
+            '020': 'ILIHAN',
+            '021': 'LANDAHAN',
+            '022': 'LOAY',
+            '023': 'LURAY II',
+            '024': 'MAGDUGO',
+            '025': 'MATAB-ANG',
+            '026': 'MEDIA-ONCE',
+            '027': 'PANGAMIHAN',
+            '028': 'POOG',
+            '029': 'PUTINGBATO',
+            '030': 'SAGAY',
+            '031': 'SAM-ANG',
+            '032': 'SANGI',
+            '033': 'STO, NIÑO',
+            '034': 'SUBAYON',
+            '035': 'TALAVERA',
+            '036': 'TUBOD',
+            '037': 'TUNGKAY',
+            '038': 'DAANLUNGSOD'
+          };
+          return map[code] || '';
+        }
+
+        // Populate cadastral card fields if this page was opened via cadastral menu (parcelRedirectData)
+        try {
+          var propertySection = document.getElementById('property-section');
+          if (propertySection && shouldHidePropertySection(data)) {
+            propertySection.classList.add('hidden');
+          }
+
+          var card = document.getElementById('cadastral-card');
+          var hideCard = shouldHideCadastralCard(data);
+          var isCadastral = !hideCard && hasCadastralIdentifier(data);
+          if (card) {
+            if (hideCard) {
+              card.classList.add('hidden');
+              card.setAttribute('aria-hidden', 'true');
+            } else if (isCadastral) {
+              var mappings = {
+                'cadastral_LOT_NUMBER': ['Assessors Data_PARCEL NO','LOT NUMBER','parcel_no','lot'],
+                'cadastral_BARANGAY': ['Assessors Data_Barangay','Assessors Data_Barangay','Barangay','Assessors Data_Barangay'],
+                'cadastral_LAST_NAME': ['Assessors Data_LastName','LAST NAME','last_name','lastname','Assessors Data_Last Name'],
+                'cadastral_FIRST_NAME': ['Assessors Data_FirstName','FIRST NAME','first_name','firstname','Assessors Data_First Name'],
+                'cadastral_SECTION': ['Assessors Data_SectionNo','Assessors Data_SectionNo','Section','section_no','SectionNo'],
+                'cadastral_AREA': ['Assessors Data_TotalArea','Assessors Data_Area','area','AREA','TotalArea'],
+                'cadastral_REMARKS': ['Assessors Data_Remarks','Remarks','remarks','Remark']
+              };
+
+              Object.keys(mappings).forEach(function(fieldKey) {
+                var variants = mappings[fieldKey];
+                var value = resolveField(data, variants) || '';
+                if (fieldKey === 'cadastral_BARANGAY' && (!value || String(value).trim() === '')) {
+                  var pinValue = resolveField(data, ['PIN','SERVER PIN','pin','server pin']) || '';
+                  value = getBarangayFromPin(String(pinValue)) || '';
+                }
+                var el = document.querySelector('[data-field="' + fieldKey + '"]');
+                if (el) el.textContent = String(value);
+              });
+
+              card.classList.remove('hidden');
+              card.setAttribute('aria-hidden', 'false');
+            }
+          }
+        } catch (eCard) {
+          console.error('Failed to populate cadastral card:', eCard);
+        }
+
+        sessionStorage.removeItem('parcelRedirectData');
+      } catch (e) {
+        console.error('Failed to load parcel redirect data:', e);
+      }
+    })();
+  </script>
+  <script>
+    (function() {
+      var openBtn = document.getElementById('add-partition-link');
+      var modal = document.getElementById('add-partition-modal');
+      var closeBtn = modal && modal.querySelector('.modal-close');
+
+      // map barangay name -> 3-digit code (shared helper)
+      function getBarangayCode(name) {
+        if (!name) return '';
+        var n = String(name).toUpperCase().trim();
+        n = n.replace(/[\u2019\u2018\u201C\u201D]/g, "'");
+        n = n.replace(/[^A-Z0-9, ]+/g, '');
+        var map = {
+          'POBLACION': '001', 'AWIHAO': '002', 'BAGAKAY': '003', 'BATO': '004', 'BIGA': '005', 'BULONGAN': '006', 'BUNGA': '007', 'CABITOONAN': '008', 'CALONGCALONG': '009', 'CAMBANGUG': '010', 'CAMPO 8': '011', 'CANLULAMPAO': '012', 'CANTABACO': '013', 'CAPT. CLAUDIO': '014', 'CARMEN': '015', 'DAS': '016', 'DUMLOG': '017', 'GEN. CLIMACO': '018', 'IBO': '019', 'ILIHAN': '020', 'LANDAHAN': '021', 'LOAY': '022', 'LURAY II': '023', 'MAGDUGO': '024', 'MATAB-ANG': '025', 'MEDIA-ONCE': '026', 'PANGAMIHAN': '027', 'POOG': '028', 'PUTINGBATO': '029', 'SAGAY': '030', 'SAM-ANG': '031', 'SANGI': '032', 'STO, NIÑO': '033', 'STO NINO': '033', 'SUBAYON': '034', 'TALAVERA': '035', 'TUBOD': '036', 'TUNGKAY': '037', 'DAANLUNGSOD': '038'
+        };
+        if (map[n]) return map[n];
+        var compact = n.replace(/[^A-Z0-9]/g, '');
+        for (var k in map) {
+          if (k.replace(/[^A-Z0-9]/g, '') === compact) return map[k];
+        }
+        return '';
+      }
+
+      function openModal() {
+        if (!modal) return;
+        try {
+          var arpA = document.querySelector('[name="arpA"]');
+          var arpB = document.querySelector('[name="arpB"]');
+          var arpC = document.querySelector('[name="arpC"]');
+          if (arpA) arpA.value = '149';
+          if (arpB) arpB.value = '00';
+
+          if (arpC) {
+            var sel = document.getElementById('record-barangay');
+            var code = '';
+            if (sel && sel.value) code = getBarangayCode(sel.value);
+            if (!code) {
+              var barangayTextEl = document.querySelector('[data-field="Assessors Data_Barangay"]');
+              if (barangayTextEl) code = getBarangayCode(barangayTextEl.textContent || barangayTextEl.innerText || '');
+            }
+            if (code) arpC.value = code;
+          }
+        } catch (eOpen) {
+          console.warn('Failed to auto-fill ARP fields:', eOpen);
+        }
+        modal.classList.remove('hidden');
+      }
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.add('hidden');
+      }
+
+      if (openBtn && modal) {
+        openBtn.addEventListener('click', function(event) {
+          event.preventDefault();
+          openModal();
+        });
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+            closeModal();
+          });
+        }
+
+        modal.addEventListener('click', function(event) {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
+
+        document.addEventListener('keydown', function(event) {
+          if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+          }
+        });
+      }
+      // Populate barangay dropdown for this standalone page
+      function fillRecordBarangays(list) {
+        try {
+          var sel = document.getElementById('record-barangay');
+          if (!sel) return;
+          sel.innerHTML = '<option value="">Select barangay</option>';
+          (list || []).forEach(function(b) {
+            var o = document.createElement('option');
+            o.value = b;
+            o.textContent = b;
+            sel.appendChild(o);
+          });
+        } catch (e) { /* ignore */ }
+      }
+
+      // Try to fetch system config to get barangays (same endpoint used by app.js)
+      (function tryLoadBarangays() {
+        if (!window.fetch) return;
+        fetch('/api/system/config').then(function(res) {
+          if (!res.ok) throw new Error('no config');
+          return res.json();
+        }).then(function(cfg) {
+          fillRecordBarangays(cfg && cfg.barangays ? cfg.barangays : []);
+        }).catch(function() {
+          // fallback: attempt to reuse any existing selects on opener window
+          try {
+            if (window.opener && !window.opener.closed) {
+              var other = window.opener.document.getElementById('record-barangay');
+              if (other) {
+                var opts = Array.from(other.options).map(function(o) { return o.value; }).filter(Boolean);
+                fillRecordBarangays(opts);
+                return;
+              }
+            }
+          } catch (e) { /* ignore cross-origin */ }
+        });
+      })();
+
+      // when user selects a barangay, update ARP barangay code (arpC)
+      (function attachBarangayChange() {
+        try {
+          var sel = document.getElementById('record-barangay');
+          if (!sel) return;
+          sel.addEventListener('change', function() {
+            try {
+              var val = sel.value || (sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].text) || '';
+              var code = getBarangayCode(val);
+              var arpC = document.querySelector('[name="arpC"]');
+              if (arpC && code) arpC.value = code;
+            } catch (e) {}
+          });
+        } catch (eAttach) { /* ignore */ }
+      })();
+    })();
+  </script>
+<script>
+  (function() {
+    var container = document.getElementById('tracer-hierarchy');
+    if (!container) return;
+    container.innerHTML = '\n      <div class="tracer-embed">\n        <div class="tracer-controls" style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">\n          <button id="scrollUp" class="btn">▲</button>\n          <button id="scrollDown" class="btn">▼</button>\n          <button id="fit" class="btn">⤢</button>\n          <button id="resetView" class="btn">Reset</button>\n          <input id="searchInput" placeholder="Search..." style="flex:1;min-width:120px"/>\n          <button id="closeSidebar" style="display:none"></button>\n        </div>\n        <div id="chart-wrap" style="width:100%;height:320px;position:relative;">\n          <div id="chart" class="chart" style="position:relative;"></div>\n        </div>\n        <aside id="sidebar" class="sidebar" aria-hidden="true" style="display:none">\n          <div id="details"></div>\n          <div id="sidebarFooter" class="sidebar-footer hidden"></div>\n        </aside>\n        <div id="addPartitionModal"></div>\n        <form id="addPartitionForm"></form>\n        <button id="cancelAddPartitionBtn" style="display:none"></button>\n        <select id="record-barangay" style="display:none"></select>\n        <select id="record-classification" style="display:none"></select>\n      </div>\n    ';
+
+    var s = document.createElement('script');
+    s.src = 'tracer.js';
+    s.onload = function() { console.debug('tracer.js loaded into parcel tracer-hierarchy'); };
+    s.onerror = function() { console.error('Failed to load tracer.js'); };
+    document.body.appendChild(s);
+  })();
+</script>
+</body>
+</html>

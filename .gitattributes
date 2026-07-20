@@ -1,0 +1,4 @@
+frontend/qgis2web_2026_05_26_10_20_18_086523/layers/PHLADM3_6.js filter=lfs diff=lfs merge=lfs -text
+frontend/qgis2web_2026_05_26-10_20_18_086523/layers/PHLADM3_6.js filter=lfs diff=lfs merge=lfs -text
+*.js filter=lfs diff=lfs merge=lfs -text
+**/layers/*.js filter=lfs diff=lfs merge=lfs -text

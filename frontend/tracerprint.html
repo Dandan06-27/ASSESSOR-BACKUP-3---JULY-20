@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tracer Print</title>
+  <link rel="stylesheet" href="./tracerprint.css">
+</head>
+<body class="a4">
+  <div class="page-controls no-print">
+    <div class="control-group">
+      <label for="paperSize">Paper size</label>
+      <select id="paperSize">
+        <option value="a4">A4</option>
+        <option value="letter">Letter</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <button id="printButton" class="action-btn">Print</button>
+    </div>
+  </div>
+
+  <div class="print-page" id="printPage">
+    <div class="print-header">
+      <div class="seal seal-left" aria-hidden="true">
+        <img src="./logo.svg" alt="City logo" class="seal-mark" />
+      </div>
+      <div class="print-title-group">
+        <div class="subtitle">Republic of the Philippines</div>
+        <div class="subtitle">City of Toledo</div>
+        <div class="separator">-oOo-</div>
+        <div class="main-title">OFFICE OF THE CITY ASSESSOR</div>
+        <div class="document-title">TRACER</div>
+      </div>
+      <div class="seal seal-right" aria-hidden="true">
+        <img src="./Assessor.png" alt="Assessor logo" class="seal-mark" />
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="tracer-table" id="tracerTable">
+        <thead>
+          <tr>
+            <th>TD. NO</th>
+            <th>DECLARANT</th>
+            <th>LOCATION</th>
+            <th>LOT NO.</th>
+            <th>AREA</th>
+            <th>P.I.N.</th>
+            <th>CONVEYANCE</th>
+            <th>EFF.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="print-footer">
+      <div class="footer-note">Toledo City Assessor Office</div>
+      <div class="footer-meta" id="footerMeta"></div>
+    </div>
+
+    <!-- Signature Section with Fields and Prepared By -->
+    <div class="signature-section">
+      <div class="fields">
+        <div class="field-row"><span class="field-label">PAID UNDER OR NO:</span> <input id="tracer-or-number" type="text" class="field-input" placeholder="" /></div>
+        <div class="field-row"><span class="field-label">AMOUNT PAID</span> <input id="tracer-amount-paid" type="text" class="field-input" placeholder="" /></div>
+        <div class="field-row"><span class="field-label">DATE ISSUED</span> <span id="tracer-date-issued-field" class="field-input"></span></div>
+      </div>
+
+      <div class="prepared-section">
+        <div class="prepared-label">Prepared by:</div>
+        <select id="tracer-prepared-by-select" onchange="updateTracerPreparedBy()" class="prepared-select">
+          <option value="april-espera" data-name="April Rose A. Espera" data-title="Admn Aide-I">Jestony Daniel M. Tampus</option>
+          <option value="custom" data-name="Custom Entry" data-title="">Custom Entry</option>
+        </select>
+        <div class="prepared-name" id="tracer-prepared-by-name">Jestony Daniel M Tampus</div>
+        <div class="prepared-title" id="tracer-prepared-by-title">Developer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Entry Modal -->
+  <div id="customEntryModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Enter Custom Information</h2>
+        <span class="modal-close" onclick="closeCustomEntryModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form-group">
+          <label for="customEntryName">Name:</label>
+          <input type="text" id="customEntryName" placeholder="Enter name" />
+        </div>
+        <div class="modal-form-group">
+          <label for="customEntryTitle">Title:</label>
+          <input type="text" id="customEntryTitle" placeholder="Enter title" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-cancel" onclick="closeCustomEntryModal()">Cancel</button>
+        <button class="modal-btn modal-submit" onclick="saveCustomEntry()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./tracerprint.js"></script>
+</body>
+</html>
