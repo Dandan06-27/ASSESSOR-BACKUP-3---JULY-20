@@ -5,8 +5,13 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
 import { AuthService } from '../auth/auth.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -70,6 +75,45 @@ export class UsersController {
   ) {
     const isSelf = actor.id === id;
     return this.users.updateProfile(id, body, actor, isSelf);
+  }
+
+  @Post(':id/avatar')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: (_req, _file, cb) => {
+          const uploadDir = join(__dirname, '..', '..', 'storage', 'avatars');
+          try {
+            require('fs').mkdirSync(uploadDir, { recursive: true });
+          } catch (err) {
+            return cb(err, uploadDir);
+          }
+          cb(null, uploadDir);
+        },
+        filename: (_req, file, cb) => {
+          const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+          cb(null, `${unique}${extname(file.originalname)}`);
+        },
+      }),
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
+  async uploadAvatar(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() actor: User,
+  ) {
+    return this.users.updateAvatar(id, file, actor);
+  }
+
+  @Patch(':id/password')
+  @Roles(UserRole.SUPER_ADMIN)
+  updatePassword(
+    @Param('id') id: string,
+    @Body('password') password: string,
+    @CurrentUser() actor: User,
+  ) {
+    return this.users.updatePassword(id, password, actor);
   }
 
   @Post(':id/assign-role')

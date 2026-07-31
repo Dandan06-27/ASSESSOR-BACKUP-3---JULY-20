@@ -109,11 +109,72 @@ export class UsersService {
 
     for (const key of allowed) {
       if (data[key] !== undefined && (isSelf || this.canManage(actor))) {
-        (user as unknown as Record<string, unknown>)[key] = data[key];
+        if (key === 'fullName') {
+          const fullName = String(data.fullName).trim();
+          if (!fullName) {
+            throw new BadRequestException('Display name cannot be empty');
+          }
+          user.fullName = fullName;
+        } else {
+          (user as unknown as Record<string, unknown>)[key] = data[key];
+        }
       }
     }
 
     await this.userRepo.save(user);
+    const { password: _, ...safe } = user;
+    return safe;
+  }
+
+  async updateAvatar(id: string, file: Express.Multer.File, actor: User) {
+    if (!file) {
+      throw new BadRequestException('No image uploaded');
+    }
+
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) throw new NotFoundException('User not found');
+
+    if (actor.id !== id && !this.canManage(actor)) {
+      throw new BadRequestException('Cannot update another user\'s avatar');
+    }
+
+    const relPath = `/storage/avatars/${file.filename}`;
+    user.profilePicture = relPath;
+    await this.userRepo.save(user);
+
+    await this.audit.log({
+      userId: actor.id,
+      action: 'UPDATE_AVATAR',
+      entity: 'user',
+      entityId: id,
+      details: { path: relPath },
+    });
+
+    return { profilePicture: relPath };
+  }
+
+  async updatePassword(id: string, password: string, actor: User) {
+    if (actor.role !== UserRole.SUPER_ADMIN) {
+      throw new BadRequestException('Only Super Admin can change participant passwords');
+    }
+
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) throw new NotFoundException('User not found');
+
+    if (!password || password.trim().length < 8) {
+      throw new BadRequestException('Password must be at least 8 characters');
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    await this.userRepo.save(user);
+
+    await this.audit.log({
+      userId: actor.id,
+      action: 'UPDATE_PASSWORD',
+      entity: 'user',
+      entityId: id,
+    });
+
     const { password: _, ...safe } = user;
     return safe;
   }

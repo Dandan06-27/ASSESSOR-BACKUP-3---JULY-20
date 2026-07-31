@@ -38,7 +38,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "LIBRE",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "TEOFILO L",
       "lotNumber": "966"
     },
@@ -51,7 +51,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "PARAS",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "AGUSTIN HRS. OF",
       "lotNumber": "1"
     },
@@ -142,7 +142,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "GUEVARRA",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "DIONISIO",
       "lotNumber": "9"
     },
@@ -155,7 +155,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "EVAGELISTA",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "ALFONSO",
       "lotNumber": "10"
     },
@@ -298,7 +298,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "ROAD LOT",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "",
       "lotNumber": "20"
     },
@@ -5615,7 +5615,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "EXEQUIEL",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "TEOFILO",
       "lotNumber": "869"
     },
@@ -5901,7 +5901,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "CONAHAP",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "GERVACIO",
       "lotNumber": "99"
     },
@@ -5914,7 +5914,7 @@
       "barangay": "POBLACION",
       "children": [],
       "lastName": "ALCOMENDRAS",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "IGNACIO",
       "lotNumber": "100"
     },
@@ -13499,40 +13499,36 @@
                                   "TITLE_NO": "Example 13",
                                   "children": [
                                     {
-                                      "id": "par_1784165511655",
-                                      "EFF": "Example 14",
-                                      "FID": "Example 14",
-                                      "PIN": "Example 14",
-                                      "name": "Example 14",
                                       "type": "parcel",
-                                      "NEW_PIN": "Example 14",
-                                      "BARANGAY": "Dumlog",
-                                      "TITLE_NO": "Example 14",
-                                      "children": [
-                                        {
-                                          "id": "par_1784165511655_new_1",
-                                          "name": "",
-                                          "type": "blank",
-                                          "children": []
-                                        }
-                                      ],
-                                      "recordId": "6ac59363-f517-4c76-969d-24206b863801",
+                                      "FID": "Example 15",
+                                      "PIN": "Example 15",
+                                      "SERVER_PIN": "149-00-018--15-",
+                                      "NEW_PIN": "Example 15",
+                                      "BARANGAY": "General Climaco (Malubog)",
+                                      "SECTION_NO": "Example 15",
+                                      "CADASTRAL_SURVEY_NO": "Example 15",
+                                      "TITLE_NO": "Example 15",
+                                      "EFF": "Example 15",
+                                      "DECLARATION_NO": "Example 15",
+                                      "CONVEYANCE": "Example 15",
+                                      "DECLARANT": "Example 15",
+                                      "PARCEL_NO": "15",
+                                      "arpF": "",
+                                      "improvement": 0,
+                                      "buildingNo": "Example 15",
+                                      "mch": "Example 15",
+                                      "oth": "Example 15",
+                                      "DISPLAY_NAME": "Example 15",
+                                      "OWNER_ADDRESS": "Example 15",
+                                      "TOTAL_AREA": "15",
                                       "DATA_UNIT": "sqm",
-                                      "DECLARANT": "Example 14",
-                                      "PARCEL_NO": "14",
-                                      "collapsed": false,
-                                      "CONVEYANCE": "Example 14",
-                                      "SECTION_NO": "Example 14",
-                                      "SERVER_PIN": "149-00-017-14-14-14",
-                                      "TOTAL_AREA": "14",
-                                      "recordSaved": true,
-                                      "DISPLAY_NAME": "Example 14",
-                                      "OWNER_ADDRESS": "Example 14",
-                                      "CLASSIFICATION": "R",
-                                      "DECLARATION_NO": "Example 14",
                                       "TOTAL_MARKET_VALUE": "",
-                                      "CADASTRAL_SURVEY_NO": "Example 14",
-                                      "TOTAL_ASSESSED_VALUE": ""
+                                      "TOTAL_ASSESSED_VALUE": "",
+                                      "CLASSIFICATION": "R",
+                                      "name": "Example 15",
+                                      "children": [],
+                                      "recordId": "ae6eae6c-6767-40bc-9f2f-efafe0225305",
+                                      "recordSaved": true
                                     }
                                   ],
                                   "recordId": "728a17af-607d-4ab9-9639-f362b0e4e70d",
@@ -13612,29 +13608,29 @@
                     },
                     {
                       "id": "par_1783671411283_new_3",
+                      "name": "",
                       "type": "blank",
                       "children": [
                         {
                           "id": "par_1783671411283_new_3_new_1",
+                          "name": "",
                           "type": "blank",
-                          "children": [],
-                          "name": ""
+                          "children": []
                         },
                         {
                           "id": "par_1783671411283_new_3_new_2",
+                          "name": "",
                           "type": "blank",
-                          "children": [],
-                          "name": ""
+                          "children": []
                         }
                       ],
-                      "name": "",
                       "collapsed": false
                     },
                     {
                       "id": "par_1783671411283_new_4",
+                      "name": "",
                       "type": "blank",
-                      "children": [],
-                      "name": ""
+                      "children": []
                     }
                   ],
                   "recordId": "7df418f5-15db-4f1f-bcbe-b6ab4731aab2",
@@ -13688,6 +13684,12 @@
           "TOTAL_MARKET_VALUE": "",
           "CADASTRAL_SURVEY_NO": "Example 22",
           "TOTAL_ASSESSED_VALUE": ""
+        },
+        {
+          "id": "cad_999_new_3",
+          "name": "",
+          "type": "blank",
+          "children": []
         }
       ],
       "lastName": "GUTANG",
@@ -13834,7 +13836,7 @@
       "barangay": "IBO",
       "children": [],
       "lastName": "LIBUMFACIL",
-      "collapsed": true,
+      "collapsed": false,
       "firstName": "GREGORIO",
       "lotNumber": "1000"
     },
@@ -41566,6 +41568,12 @@
       "collapsed": true,
       "firstName": "SEVERINO",
       "lotNumber": "2268"
+    },
+    {
+      "id": "root_new_6322",
+      "name": "",
+      "type": "blank",
+      "children": []
     },
     {
       "id": "cad_2269",
@@ -82648,22 +82656,185 @@
       "lotNumber": "6349"
     },
     {
-      "id": "root_new_6320",
-      "type": "blank",
-      "children": [],
-      "name": ""
+      "id": "cadastral_1784605304730",
+      "area": "6767",
+      "name": "TAMPUS, JESTONY DANIEL",
+      "type": "cadastral",
+      "remarks": "TEST ONLY",
+      "section": "67",
+      "barangay": "Bato",
+      "children": [
+        {
+          "EFF": "",
+          "FID": "",
+          "PIN": "",
+          "name": "New parcel",
+          "NEW_PIN": "",
+          "BARANGAY": "",
+          "TITLE_NO": "",
+          "children": [],
+          "DATA_UNIT": "sqm",
+          "DECLARANT": "",
+          "PARCEL_NO": "",
+          "CONVEYANCE": "",
+          "SECTION_NO": "",
+          "SERVER_PIN": "-----",
+          "TOTAL_AREA": "",
+          "recordSaved": false,
+          "DISPLAY_NAME": "",
+          "OWNER_ADDRESS": "",
+          "CLASSIFICATION": "",
+          "DECLARATION_NO": "",
+          "TOTAL_MARKET_VALUE": "",
+          "CADASTRAL_SURVEY_NO": "",
+          "TOTAL_ASSESSED_VALUE": ""
+        },
+        {
+          "id": "par_1784853090309",
+          "EFF": "Example 2",
+          "FID": "Example 2",
+          "PIN": "Example 2",
+          "name": "Example 2",
+          "type": "parcel",
+          "NEW_PIN": "Example 2",
+          "BARANGAY": "Bato",
+          "TITLE_NO": "Example 2",
+          "children": [],
+          "recordId": "392d5ff7-d607-4ac2-9601-500c52c9106d",
+          "DATA_UNIT": "sqm",
+          "DECLARANT": "Example 2",
+          "PARCEL_NO": "2",
+          "CONVEYANCE": "Example 2",
+          "SECTION_NO": "Example 2",
+          "SERVER_PIN": "149-00-004-2-2-2",
+          "TOTAL_AREA": "2",
+          "recordSaved": true,
+          "DISPLAY_NAME": "Example 2",
+          "OWNER_ADDRESS": "Example 2",
+          "CLASSIFICATION": "R",
+          "DECLARATION_NO": "Example 2",
+          "TOTAL_MARKET_VALUE": "",
+          "CADASTRAL_SURVEY_NO": "Example 2",
+          "TOTAL_ASSESSED_VALUE": ""
+        },
+        {
+          "id": "par_1784854403439",
+          "EFF": "Example 3",
+          "FID": "Example 3",
+          "PIN": "Example 3",
+          "name": "Example 3",
+          "type": "parcel",
+          "NEW_PIN": "Example 3",
+          "BARANGAY": "Dumlog",
+          "TITLE_NO": "Example 3",
+          "children": [],
+          "recordId": "cd51715f-9554-436b-87eb-17a5f14d20d2",
+          "DATA_UNIT": "sqm",
+          "DECLARANT": "Example 3",
+          "PARCEL_NO": "3",
+          "CONVEYANCE": "Example 3",
+          "SECTION_NO": "Example 3",
+          "SERVER_PIN": "149-00-017-3-3-3",
+          "TOTAL_AREA": "3",
+          "recordSaved": true,
+          "DISPLAY_NAME": "Example 3",
+          "OWNER_ADDRESS": "Example 3",
+          "CLASSIFICATION": "R",
+          "DECLARATION_NO": "Example 3",
+          "TOTAL_MARKET_VALUE": "",
+          "CADASTRAL_SURVEY_NO": "Example 3",
+          "TOTAL_ASSESSED_VALUE": ""
+        }
+      ],
+      "lastName": "TAMPUS",
+      "recordId": "6aa5f8ce-53da-4bf2-811c-4de175ade4f6",
+      "collapsed": false,
+      "firstName": "JESTONY DANIEL",
+      "lotNumber": "9999",
+      "motherlotRecordId": "204dd546-8a7f-407d-9c6f-505e4882663a"
     },
     {
-      "id": "root_new_6321",
-      "type": "blank",
-      "children": [],
-      "name": ""
-    },
-    {
-      "id": "root_new_6322",
-      "type": "blank",
-      "children": [],
-      "name": ""
+      "id": "cadastral_1784855274377",
+      "area": "123",
+      "name": "Example 3, Example 2",
+      "type": "cadastral",
+      "remarks": "TEST",
+      "section": "Example 4",
+      "barangay": "Bato",
+      "children": [
+        {
+          "id": "par_1784855425725",
+          "EFF": "Eff",
+          "FID": "FID",
+          "PIN": "A Lot No",
+          "name": "Name",
+          "type": "parcel",
+          "NEW_PIN": "PIN",
+          "BARANGAY": "Bato",
+          "TITLE_NO": "Title",
+          "children": [
+            {
+              "id": "par_1784855652662",
+              "EFF": "EFF",
+              "FID": "FID",
+              "PIN": "A Lot No",
+              "name": "AME",
+              "type": "parcel",
+              "NEW_PIN": "NEW PIN",
+              "BARANGAY": "Bato",
+              "TITLE_NO": "TITLE",
+              "children": [
+                {
+                  "id": "par_1784855652662_new_1",
+                  "name": "",
+                  "type": "blank",
+                  "children": []
+                }
+              ],
+              "recordId": "5474ec16-5b30-4367-98d9-3848bb8ecd1c",
+              "DATA_UNIT": "sqm",
+              "DECLARANT": "DECLARANT",
+              "PARCEL_NO": "2",
+              "collapsed": false,
+              "CONVEYANCE": "CONVEYANCE",
+              "SECTION_NO": "SECTION",
+              "SERVER_PIN": "149-00-004-1-2-3",
+              "TOTAL_AREA": "1",
+              "recordSaved": true,
+              "DISPLAY_NAME": "AME",
+              "OWNER_ADDRESS": "LOCATION",
+              "CLASSIFICATION": "A",
+              "DECLARATION_NO": "EFF",
+              "TOTAL_MARKET_VALUE": "",
+              "CADASTRAL_SURVEY_NO": "C Lot No",
+              "TOTAL_ASSESSED_VALUE": ""
+            }
+          ],
+          "recordId": "4fc51894-416b-4b06-869e-4141111e88f4",
+          "DATA_UNIT": "sqm",
+          "DECLARANT": "Declarant",
+          "PARCEL_NO": "parcel",
+          "collapsed": false,
+          "CONVEYANCE": "Conveyance",
+          "SECTION_NO": "Section",
+          "SERVER_PIN": "149-00-004-City-parcel-blg",
+          "TOTAL_AREA": "1",
+          "recordSaved": true,
+          "DISPLAY_NAME": "Name",
+          "OWNER_ADDRESS": "Location",
+          "CLASSIFICATION": "A",
+          "DECLARATION_NO": "Eff",
+          "TOTAL_MARKET_VALUE": "",
+          "CADASTRAL_SURVEY_NO": "C Lot No",
+          "TOTAL_ASSESSED_VALUE": ""
+        }
+      ],
+      "lastName": "Example 3",
+      "recordId": "8710da2c-22c9-4faf-9712-fcc1be403ba9",
+      "collapsed": false,
+      "firstName": "Example 2",
+      "lotNumber": "Example 1",
+      "motherlotRecordId": "a15c120d-9987-4a40-8c7f-684b26f91d23"
     }
   ],
   "collapsed": false

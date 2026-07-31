@@ -112,7 +112,7 @@ export class RecordsController {
   @Post('import/qgis')
   @Roles(UserRole.SUPER_ADMIN, UserRole.ASSISTANT_ADMIN, UserRole.ADMIN)
   importQgis(@CurrentUser() user: User) {
-    return this.records.bulkImportQgis(user);
+    return this.records.bulkImportQgis(user, true);
   }
 
   @Post('upload-qgis')
@@ -127,7 +127,34 @@ export class RecordsController {
     @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: User,
   ) {
-    return this.records.validateQgisUpload(file, user);
+    return this.records.persistQgisUpload(file, user);
+  }
+
+  @Get('qgis-export/active')
+  @Roles(
+    UserRole.SUPER_ADMIN,
+    UserRole.ASSISTANT_ADMIN,
+    UserRole.ADMIN,
+    UserRole.USER,
+  )
+  activeQgisExport() {
+    return this.records.getActiveQgisExport();
+  }
+
+  @Get('qgis-export/history')
+  @Roles(
+    UserRole.SUPER_ADMIN,
+    UserRole.ASSISTANT_ADMIN,
+    UserRole.ADMIN,
+  )
+  qgisExportHistory() {
+    return this.records.listQgisExportHistory();
+  }
+
+  @Post('qgis-export/rollback')
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ASSISTANT_ADMIN, UserRole.ADMIN)
+  rollbackQgisExport(@Body() body: { exportId: string }, @CurrentUser() user: User) {
+    return this.records.rollbackQgisExport(body.exportId, user);
   }
 
   @Get(':id')

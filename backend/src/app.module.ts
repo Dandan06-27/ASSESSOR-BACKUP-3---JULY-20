@@ -11,6 +11,7 @@ import { AuditLog } from './entities/audit-log.entity';
 import { Division } from './entities/division.entity';
 import { Document } from './entities/document.entity';
 import { LandRecord } from './entities/land-record.entity';
+import { MotherLot } from './entities/mother-lot.entity';
 import { Notification } from './entities/notification.entity';
 import { TracerTree } from './entities/tracer-tree.entity';
 import { Permission } from './entities/permission.entity';
@@ -29,6 +30,7 @@ import { SystemModule } from './system/system.module';
 import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 import { TracerModule } from './tracer/tracer.module';
+import { MotherLotsModule } from './motherlots/motherlots.module';
 
 @Module({
   imports: [
@@ -55,6 +57,7 @@ import { TracerModule } from './tracer/tracer.module';
           AuditLog,
           Document,
           TracerTree,
+          MotherLot,
         ],
         synchronize: true,
         timezone: 'Asia/Manila',
@@ -62,7 +65,7 @@ import { TracerModule } from './tracer/tracer.module';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'frontend'),
-      exclude: ['/api/(.*)'],
+      exclude: ['/api', '/api/*'],
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'QGIS_WEB'),
@@ -88,6 +91,7 @@ import { TracerModule } from './tracer/tracer.module';
     SeedModule,
     // tracer module provides endpoints for saving/loading tracer tree
     TracerModule,
+    MotherLotsModule,
   ],
 })
 export class AppModule {}

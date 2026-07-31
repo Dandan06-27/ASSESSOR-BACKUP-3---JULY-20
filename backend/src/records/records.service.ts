@@ -47,6 +47,7 @@ export class RecordsService implements OnModuleInit {
   async create(dto: CreateLandRecordDto, user: User) {
     const record = this.recordRepo.create({
       ...dto,
+      indexNo: dto.indexNo || dto.sectionNo,
       createdById: user.id,
     });
     const saved = await this.recordRepo.save(record);
@@ -63,7 +64,10 @@ export class RecordsService implements OnModuleInit {
   async update(id: string, dto: UpdateLandRecordDto, user: User) {
     const record = await this.recordRepo.findOne({ where: { id } });
     if (!record) throw new NotFoundException('Record not found');
-    Object.assign(record, dto);
+    Object.assign(record, {
+      ...dto,
+      indexNo: dto.indexNo || dto.sectionNo || record.indexNo,
+    });
     const saved = await this.recordRepo.save(record);
     await this.audit.log({
       userId: user.id,
@@ -135,7 +139,7 @@ export class RecordsService implements OnModuleInit {
     const qb = this.recordRepo.createQueryBuilder('r');
     if (filters.indexNo) {
       qb.andWhere(
-        `(r.indexNo ILIKE :search OR r.assessorsLotNo ILIKE :search OR r.cadastralLotNo ILIKE :search OR r.tdNo ILIKE :search OR r.nameOfOwner ILIKE :search OR r.titleNo ILIKE :search)`,
+        `(r.indexNo ILIKE :search OR r.assessorsLotNo ILIKE :search OR r.cadastralLotNo ILIKE :search OR r.pin ILIKE :search OR r.newPin ILIKE :search OR r.fid ILIKE :search OR r.tdNo ILIKE :search OR r.nameOfOwner ILIKE :search OR r.titleNo ILIKE :search)`,
         { search: `%${filters.indexNo}%` },
       );
     }
@@ -569,6 +573,28 @@ export class RecordsService implements OnModuleInit {
     return undefined;
   }
 
+  private getQgisExportDirectories(searchPaths: string[], latestOnly = false): string[] {
+    const qgisLayerPattern = /^qgis2web_\d{4}_\d{2}_\d{2}[A-Za-z0-9_-]*$/;
+    const qgisDirs: string[] = [];
+
+    for (const searchPath of searchPaths) {
+      try {
+        const dirs = readdirSync(searchPath, { withFileTypes: true })
+          .filter((d) => d.isDirectory() && qgisLayerPattern.test(d.name))
+          .map((d) => join(searchPath, d.name));
+        qgisDirs.push(...dirs);
+      } catch {
+        continue;
+      }
+    }
+
+    if (!qgisDirs.length) return [];
+
+    qgisDirs.sort((a, b) => b.localeCompare(a));
+
+    return latestOnly ? qgisDirs.slice(0, 1) : qgisDirs;
+  }
+
   private normalizeString(value: any): string | undefined {
     if (value === null || value === undefined) return undefined;
     const text = String(value).trim();
@@ -733,29 +759,29 @@ export class RecordsService implements OnModuleInit {
     return null;
   }
 
-  async bulkImportQgis(user?: User): Promise<any> {
+  async bulkImportQgis(user?: User, latestOnly = true): Promise<any> {
     try {
       const userId = user?.id;
+
+      if (latestOnly) {
+        const activeExport = await this.getActiveQgisExport();
+        if (activeExport && Array.isArray(activeExport.layers) && activeExport.layers.length > 0) {
+          const result = await this.replaceRecordsFromQgisPayload(activeExport, user);
+          return {
+            ...result,
+            source: 'active-export',
+            message: `Imported ${result.imported} parcels from active persisted QGIS export`,
+          };
+        }
+      }
+
       // Try multiple paths to find qgis2web exports
       const searchPaths = [
         join(process.cwd(), '..', 'frontend'), // ../frontend from backend
         join(process.cwd(), '..'),             // root level
       ];
 
-      // Regex pattern: matches qgis2web_YYYY_MM_DD... with dashes and underscores allowed
-      const qgisLayerPattern = /^qgis2web_\d{4}_\d{2}_\d{2}[\d_-]*$/;
-
-      const qgisDirs: string[] = [];
-      for (const searchPath of searchPaths) {
-        try {
-          const dirs = readdirSync(searchPath, { withFileTypes: true })
-            .filter((d) => d.isDirectory() && qgisLayerPattern.test(d.name))
-            .map((d) => join(searchPath, d.name));
-          qgisDirs.push(...dirs);
-        } catch (e) {
-          continue;
-        }
-      }
+      const qgisDirs = this.getQgisExportDirectories(searchPaths, latestOnly);
 
       if (qgisDirs.length === 0) {
         throw new BadRequestException(
@@ -763,7 +789,6 @@ export class RecordsService implements OnModuleInit {
         );
       }
 
-      qgisDirs.sort((a, b) => b.localeCompare(a));
       const imported: LandRecord[] = [];
       const skipped: string[] = [];
       const processedDirs: string[] = [];
