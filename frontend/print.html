@@ -26,7 +26,9 @@
               <button type="button" onclick="promptSetSize()">Set Size</button>
             </div>
             <svg class="annotation-svg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-            <div class="annotation-layer" aria-hidden="false"></div>
+            <div class="annotation-layer" aria-hidden="false">
+              <div id="property-records-print-content" class="property-records-print-content" hidden></div>
+            </div>
 
             <!-- Map overlays: Prepared by and Prepared for -->
             <div class="map-overlay">
@@ -192,7 +194,33 @@
       }
     }
 
+    function initializePropertyRecordsPrintMode() {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('mode') !== 'property-records') return;
+
+      var container = document.querySelector('.map-container');
+      var content = document.getElementById('property-records-print-content');
+      if (!container || !content) return;
+
+      container.classList.add('is-property-records');
+      try {
+        var payloadText = window.sessionStorage.getItem('property-records-print-payload');
+        if (payloadText) {
+          var payload = JSON.parse(payloadText);
+          content.innerHTML = payload.html || '';
+          content.hidden = false;
+          if (payload.title) {
+            document.title = payload.title;
+          }
+          window.sessionStorage.removeItem('property-records-print-payload');
+        }
+      } catch (error) {
+        console.warn('Unable to load property records print payload', error);
+      }
+    }
+
     initializePrintPage();
+    initializePropertyRecordsPrintMode();
 
     function setPrintPageSize(sizeKey) {
       var sizeMap = {
@@ -406,7 +434,7 @@
         if (lineCreationState.points.length === 2) {
           var p1 = lineCreationState.points[0];
           var p2 = lineCreationState.points[1];
-          createStraightLineAnnotation(p1, p2);
+          createStraightLineAnnotation(p1, p2, lineCreationState.type);
           // cleanup
           container.removeEventListener('click', lineCreationState.listener, true);
           lineCreationState = null;
@@ -419,14 +447,14 @@
     }
 
     function addBrokenLineAnnotation() {
-      addSvgAnnotation('polyline');
+      startLineCreation('broken-line');
     }
 
     function addStraightLineAnnotation() {
-      createStraightLineAnnotation({ x: 10, y: 50 }, { x: 90, y: 50 });
+      createStraightLineAnnotation({ x: 10, y: 50 }, { x: 90, y: 50 }, 'line');
     }
 
-    function createStraightLineAnnotation(p1, p2) {
+    function createStraightLineAnnotation(p1, p2, type) {
       var layer = document.querySelector('.annotation-layer');
       if (!layer) {
         return;
@@ -466,12 +494,15 @@
       line.setAttribute('x2', p2.x);
       line.setAttribute('y2', p2.y);
       line.classList.add('annotation-line');
-      line.setAttribute('data-type', 'line');
+      line.setAttribute('data-type', type === 'broken-line' ? 'broken-line' : 'line');
       line.setAttribute('fill', 'none');
       line.setAttribute('stroke', 'rgba(0,0,0,0.5)');
       line.setAttribute('vector-effect', 'non-scaling-stroke');
       line.setAttribute('shape-rendering', 'geometricPrecision');
       line.setAttribute('stroke-opacity', '0.5');
+      if (type === 'broken-line') {
+        line.setAttribute('stroke-dasharray', '4,4');
+      }
       line.style.opacity = '0.5';
       // let clicks target the line stroke specifically
       line.style.pointerEvents = 'stroke';

@@ -82,7 +82,7 @@ export class UsersController {
     FileInterceptor('file', {
       storage: diskStorage({
         destination: (_req, _file, cb) => {
-          const uploadDir = join(__dirname, '..', '..', 'storage', 'avatars');
+          const uploadDir = join(__dirname, '..', '..', '..', 'storage', 'avatars');
           try {
             require('fs').mkdirSync(uploadDir, { recursive: true });
           } catch (err) {

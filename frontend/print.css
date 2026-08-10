@@ -32,7 +32,31 @@ body{
 .annotation-controls button{padding:5px 8px;background:#fff;border:1px solid #999;border-radius:4px;color:#111;cursor:pointer}
 .annotation-controls button:hover{background:#f2f2f2}
 .annotation-svg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:auto}
-.annotation-layer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:auto}
+.annotation-layer{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:auto;display:flex;align-items:center;justify-content:center;overflow:visible}
+.property-records-print-content{position:relative;max-width:600px;width:90%;max-height:90%;overflow:auto;padding:16px;background:#fff;z-index:20;border-radius:4px;display:block !important}
+.property-records-print-content[hidden]{display:none !important}
+.map-container.is-property-records{background:#fff;display:flex;align-items:center;justify-content:center}
+.map-container.is-property-records .map-placeholder,
+.map-container.is-property-records .north-arrow,
+.map-container.is-property-records .map-overlay,
+.map-container.is-property-records .annotation-controls,
+.map-container.is-property-records .annotation-svg{display:none !important}
+.property-records-print-content .property-records-print-title{display:none}
+.property-records-print-content .technical-desc-table{width:100%;border-collapse:collapse;border:1.5px solid #111;font-size:10.5px;table-layout:fixed}
+.property-records-print-content .technical-desc-table th,
+.property-records-print-content .technical-desc-table td{border:1px solid #111;padding:7px;text-align:center;word-wrap:break-word}
+.property-records-print-content .technical-desc-table th{vertical-align:middle}
+.property-records-print-content .technical-desc-table td{vertical-align:middle}
+.property-records-print-content .header-row th,
+.property-records-print-content .subheader-row th,
+.property-records-print-content .column-headers th{background:#0d3264;color:#fff;font-weight:700;padding:8px}
+.property-records-print-content .subheader-row th{background:#123f7e}
+.property-records-print-content .tp-row{background:#f8f1f2}
+.property-records-print-content .tech-row{background:#fff}
+.property-records-print-content .additional-info{display:none}
+.property-records-print-content .additional-info dl{display:grid;grid-template-columns:100px 1fr;gap:4px 8px;font-size:10px}
+.property-records-print-content .additional-info dt{font-weight:700;color:#0d3264}
+.property-records-print-content .additional-info dd{margin:0}
 .annotation-text{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:0 4px;min-width:40px;min-height:22px;color:#000000;font-family:Calibri, 'Segoe UI', Arial, sans-serif;font-weight:700;font-size:12px;line-height:1;white-space:nowrap;cursor:move;pointer-events:auto;background:transparent;border:none;text-shadow:-1px -1px 0 rgba(255,255,0,0.8),1px -1px 0 rgba(255,255,0,0.8),-1px 1px 0 rgba(255,255,0,0.8),1px 1px 0 rgba(255,255,0,0.8)}
 .annotation-text{display:inline-block}
 .annotation-text.selected{box-shadow:0 0 0 2px rgba(0,123,255,0.45)}
@@ -374,6 +398,7 @@ body{
   body{margin:0}
   .page{padding:0}
   .certificate{border-width:2px;padding:4mm}
+  .right{border-left:2px solid #000}
   #official-select{display:none}
   .sign-block label{display:none}
   .prepared-select{display:none}
@@ -382,6 +407,10 @@ body{
   .override-text-btn{display:none}
   .print-btn{display:none}
   .annotation-controls{display:none !important}
+  .annotation-svg{display:none !important}
+  .annotation-layer{position:static !important;top:auto !important;left:auto !important;width:auto !important;height:auto !important;z-index:auto !important;display:block !important;pointer-events:auto !important}
+  .property-records-print-content{display:block !important;position:static !important;max-width:100% !important;width:100% !important;padding:0 !important;background:none !important;z-index:auto !important}
+  .annotation-line-wrapper{display:none !important}
   .modal{display:none !important}
   .annotation-line{stroke:rgba(0,0,0,0.5) !important;opacity:.5 !important;stroke-opacity:.5 !important;}
 }

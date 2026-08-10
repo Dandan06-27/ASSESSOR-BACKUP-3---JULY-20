@@ -155,7 +155,7 @@
         <aside class="sidebar" id="app-sidebar">
           <div class="sidebar-top">
             <button type="button" id="btn-sidebar-toggle" class="icon-btn sidebar-toggle" aria-label="Toggle sidebar">
-              <span class="menu-icon">☰</span>
+              <span class="menu-icon">&lt;</span>
             </button>
             <div class="brand">
               <img class="logo" src="/logo.svg" alt="">
@@ -263,12 +263,13 @@
           </nav>
 
           <div class="sidebar-footer">
+            <button type="button" id="btn-profile-self" class="profile-self-btn">
+              <span class="profile-self-avatar">
+                <img id="self-avatar" src="" alt="Profile photo" class="avatar sm hidden" />
+                <span class="profile-self-icon" aria-hidden="true">👤</span>
+              </span>
+              <span id="self-name">Profile</span>
             </button>
-            <button type="button" id="btn-profile-self" class="user-chip">
-              <img id="self-avatar" src="" alt="" class="avatar sm hidden" />
-              <span id="self-name">User</span>
-            </button>
-            <button type="button" id="btn-logout" class="btn ghost">Logout</button>
           </div>
         </aside>
 
@@ -460,8 +461,8 @@
               <table class="simple-table" id="table-view-land">
                 <thead>
                   <tr>
-                    <th>Assessor ID</th>
                     <th>Cadastral Lot</th>
+                    <th>PIN</th>
                     <th>TD No.</th>
                     <th>Owner</th>
                     <th>Index</th>
@@ -482,8 +483,6 @@
                 <p class="muted">All encoded RPU records — <span id="proprec-count">0</span> total entry</p>
               </div>
               <div style="margin-left:auto; display:flex; gap:0.5rem; align-items:center;">
-                <button type="button" id="export-excel-property" class="btn">Export Excel</button>
-                <button type="button" id="print-property" class="btn">Print</button>
                 <button type="button" id="add-rpu-btn" class="btn primary"><strong>+ Add RPU</strong></button>
               </div>
             </div>
@@ -636,6 +635,9 @@
             <span class="field-label">About</span>
             <span class="field-value" id="profile-bio">—</span>
           </div>
+        </div>
+        <div class="profile-card-actions">
+          <button type="button" id="btn-logout" class="btn danger">Log out</button>
         </div>
       </div>
     </div>

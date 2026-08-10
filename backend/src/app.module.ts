@@ -64,16 +64,15 @@ import { MotherLotsModule } from './motherlots/motherlots.module';
       }),
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'frontend'),
-      exclude: ['/api', '/api/*'],
+      rootPath: join(__dirname, '..', '..', 'storage'),
+      serveRoot: '/storage',
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'QGIS_WEB'),
       serveRoot: '/QGIS_WEB',
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'storage'),
-      serveRoot: '/storage',
+      rootPath: join(__dirname, '..', '..', 'frontend'),
     }),
     AuditModule,
     AuthModule,

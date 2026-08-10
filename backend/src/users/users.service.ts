@@ -105,6 +105,7 @@ export class UsersService {
       'bio',
       'profilePicture',
       'divisionId',
+      'role',
     ] as const;
 
     for (const key of allowed) {
@@ -115,6 +116,17 @@ export class UsersService {
             throw new BadRequestException('Display name cannot be empty');
           }
           user.fullName = fullName;
+        } else if (key === 'role') {
+          if (data.role === UserRole.SUPER_ADMIN) {
+            throw new BadRequestException('Cannot set Super Admin role here');
+          }
+          if (data.role === UserRole.ASSISTANT_ADMIN && actor.role !== UserRole.SUPER_ADMIN) {
+            throw new BadRequestException('Only Super Admin can assign Assistant Admin');
+          }
+          if (data.role === UserRole.ADMIN && ![UserRole.SUPER_ADMIN, UserRole.ASSISTANT_ADMIN].includes(actor.role)) {
+            throw new BadRequestException('Only Super Admin or Assistant Admin can assign Admin roles');
+          }
+          user.role = data.role as UserRole;
         } else {
           (user as unknown as Record<string, unknown>)[key] = data[key];
         }
