@@ -112,5 +112,15 @@
   </div>
 
   <script src="./tracerprint.js"></script>
+  <script>
+    (function hideHtmlSuffix() {
+      const url = new URL(window.location.href);
+      const pathname = url.pathname.replace(/\/index\.html$/i, '/');
+      if (/\.html$/i.test(pathname)) {
+        url.pathname = pathname.replace(/\.html$/i, '');
+        window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+      }
+    })();
+  </script>
 </body>
 </html>

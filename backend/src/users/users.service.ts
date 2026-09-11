@@ -99,6 +99,7 @@ export class UsersService {
 
     const allowed = [
       'fullName',
+      'email',
       'position',
       'contactNumber',
       'address',
@@ -116,6 +117,16 @@ export class UsersService {
             throw new BadRequestException('Display name cannot be empty');
           }
           user.fullName = fullName;
+        } else if (key === 'email') {
+          const email = String(data.email || '').trim().toLowerCase();
+          if (!email) {
+            throw new BadRequestException('Email cannot be empty');
+          }
+          const exists = await this.userRepo.findOne({ where: { email } });
+          if (exists && exists.id !== id) {
+            throw new BadRequestException('Email already registered');
+          }
+          user.email = email;
         } else if (key === 'role') {
           if (data.role === UserRole.SUPER_ADMIN) {
             throw new BadRequestException('Cannot set Super Admin role here');

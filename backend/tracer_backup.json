@@ -13499,36 +13499,36 @@
                                   "TITLE_NO": "Example 13",
                                   "children": [
                                     {
-                                      "type": "parcel",
+                                      "EFF": "Example 15",
                                       "FID": "Example 15",
                                       "PIN": "Example 15",
-                                      "SERVER_PIN": "149-00-018--15-",
-                                      "NEW_PIN": "Example 15",
-                                      "BARANGAY": "General Climaco (Malubog)",
-                                      "SECTION_NO": "Example 15",
-                                      "CADASTRAL_SURVEY_NO": "Example 15",
-                                      "TITLE_NO": "Example 15",
-                                      "EFF": "Example 15",
-                                      "DECLARATION_NO": "Example 15",
-                                      "CONVEYANCE": "Example 15",
-                                      "DECLARANT": "Example 15",
-                                      "PARCEL_NO": "15",
-                                      "arpF": "",
-                                      "improvement": 0,
-                                      "buildingNo": "Example 15",
                                       "mch": "Example 15",
                                       "oth": "Example 15",
-                                      "DISPLAY_NAME": "Example 15",
-                                      "OWNER_ADDRESS": "Example 15",
-                                      "TOTAL_AREA": "15",
-                                      "DATA_UNIT": "sqm",
-                                      "TOTAL_MARKET_VALUE": "",
-                                      "TOTAL_ASSESSED_VALUE": "",
-                                      "CLASSIFICATION": "R",
+                                      "arpF": "",
                                       "name": "Example 15",
+                                      "type": "parcel",
+                                      "NEW_PIN": "Example 15",
+                                      "BARANGAY": "General Climaco (Malubog)",
+                                      "TITLE_NO": "Example 15",
                                       "children": [],
                                       "recordId": "ae6eae6c-6767-40bc-9f2f-efafe0225305",
-                                      "recordSaved": true
+                                      "DATA_UNIT": "sqm",
+                                      "DECLARANT": "Example 15",
+                                      "PARCEL_NO": "15",
+                                      "CONVEYANCE": "Example 15",
+                                      "SECTION_NO": "Example 15",
+                                      "SERVER_PIN": "149-00-018--15-",
+                                      "TOTAL_AREA": "15",
+                                      "buildingNo": "Example 15",
+                                      "improvement": 0,
+                                      "recordSaved": true,
+                                      "DISPLAY_NAME": "Example 15",
+                                      "OWNER_ADDRESS": "Example 15",
+                                      "CLASSIFICATION": "R",
+                                      "DECLARATION_NO": "Example 15",
+                                      "TOTAL_MARKET_VALUE": "",
+                                      "CADASTRAL_SURVEY_NO": "Example 15",
+                                      "TOTAL_ASSESSED_VALUE": ""
                                     }
                                   ],
                                   "recordId": "728a17af-607d-4ab9-9639-f362b0e4e70d",
@@ -82727,7 +82727,82 @@
           "NEW_PIN": "Example 3",
           "BARANGAY": "Dumlog",
           "TITLE_NO": "Example 3",
-          "children": [],
+          "children": [
+            {
+              "type": "parcel",
+              "FID": "Sample 4",
+              "PIN": "Sample 4",
+              "SERVER_PIN": "149-00-017-Sample 4-Sample 4-Sample 4",
+              "NEW_PIN": "Sample 4",
+              "BARANGAY": "Dumlog",
+              "SECTION_NO": "Sample 4",
+              "CADASTRAL_SURVEY_NO": "Sample 4",
+              "TITLE_NO": "Sample 4",
+              "EFF": "Sample 4",
+              "DECLARATION_NO": "Sample 4",
+              "CONVEYANCE": "Sample 4",
+              "DECLARANT": "Sample 4",
+              "PARCEL_NO": "Sample 4",
+              "arpF": "Sample 4",
+              "improvement": 0,
+              "buildingNo": "Sample 4",
+              "mch": "Sample 4",
+              "oth": "Sample 4",
+              "DISPLAY_NAME": "Sample 4",
+              "OWNER_ADDRESS": "Sample 4",
+              "TOTAL_AREA": "4",
+              "DATA_UNIT": "sqm",
+              "TOTAL_MARKET_VALUE": "",
+              "TOTAL_ASSESSED_VALUE": "",
+              "CLASSIFICATION": "R",
+              "name": "Sample 4",
+              "children": [],
+              "recordId": "77cc52af-8d3e-4f32-bd77-255a6b9e3179",
+              "recordSaved": true
+            },
+            {
+              "id": "par_1784854403439_new_2",
+              "type": "blank",
+              "children": [
+                {
+                  "id": "par_1784854403439_new_2_new_1",
+                  "type": "blank",
+                  "children": [
+                    {
+                      "id": "par_1784854403439_new_2_new_1_new_1",
+                      "type": "blank",
+                      "children": [],
+                      "name": ""
+                    },
+                    {
+                      "id": "par_1784854403439_new_2_new_1_new_2",
+                      "type": "blank",
+                      "children": [
+                        {
+                          "id": "par_1784854403439_new_2_new_1_new_2_new_1",
+                          "type": "blank",
+                          "children": [],
+                          "name": ""
+                        }
+                      ],
+                      "name": "",
+                      "collapsed": false
+                    }
+                  ],
+                  "name": "",
+                  "collapsed": false
+                }
+              ],
+              "name": "",
+              "collapsed": false
+            },
+            {
+              "id": "par_1784854403439_new_3",
+              "type": "blank",
+              "children": [],
+              "name": ""
+            }
+          ],
           "recordId": "cd51715f-9554-436b-87eb-17a5f14d20d2",
           "DATA_UNIT": "sqm",
           "DECLARANT": "Example 3",
@@ -82743,7 +82818,8 @@
           "DECLARATION_NO": "Example 3",
           "TOTAL_MARKET_VALUE": "",
           "CADASTRAL_SURVEY_NO": "Example 3",
-          "TOTAL_ASSESSED_VALUE": ""
+          "TOTAL_ASSESSED_VALUE": "",
+          "collapsed": false
         }
       ],
       "lastName": "TAMPUS",

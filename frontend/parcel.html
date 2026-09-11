@@ -6,6 +6,19 @@
   <title>Toledo City Assessor Parcel</title>
   <link rel="icon" type="image/x-icon" href="logo.svg">
   <link rel="stylesheet" href="parcel.css" />
+  <script>
+    (function hideHtmlSuffix() {
+      try {
+        var url = new URL(window.location.href);
+        if (/\.html$/i.test(url.pathname)) {
+          url.pathname = url.pathname.replace(/\.html$/i, '');
+          window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+        }
+      } catch (e) {
+        // ignore unsupported URL rewriting
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="page-shell">

@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Certificate — Print Template</title>
   <link rel="stylesheet" href="print.css" />
+  <script>
+    (function hideHtmlSuffix() {
+      try {
+        var url = new URL(window.location.href);
+        if (/\.html$/i.test(url.pathname)) {
+          url.pathname = url.pathname.replace(/\.html$/i, '');
+          window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+        }
+      } catch (e) {
+        // ignore unsupported URL rewriting
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="page">
